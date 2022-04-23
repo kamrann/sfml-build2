@@ -1,7 +1,7 @@
 : 1
 location: sfml-system/
-# :
-# location: sfml-window/
+:
+location: sfml-window/
 # :
 # location: sfml-network/
 # :

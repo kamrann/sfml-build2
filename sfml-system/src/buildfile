@@ -1,0 +1,56 @@
+intf_libs = # Interface dependencies.
+impl_libs = # Implementation dependencies.
+
+# Public headers.
+pub = [dir_path] ../include/
+
+include $pub
+
+pub_hdrs = $($pub/ pub_hdrs)
+
+lib{sfml-system}: $pub/{$pub_hdrs}
+
+# Private headers and sources as well as dependencies.
+lib{sfml-system}: SFML/System/{hxx cxx}{*} $impl_libs $intf_libs
+
+switch $cxx.target.class
+{
+	case 'windows'
+		lib{sfml-system}: SFML/System/Win32/{hxx cxx}{*}
+	case 'linux'
+	case 'macos'
+		lib{sfml-system}: SFML/System/Unix/{hxx cxx}{*}
+}
+
+# Build options.
+out_pfx_inc = [dir_path] $out_root/include/
+src_pfx_inc = [dir_path] $src_root/include/
+out_pfx_src = [dir_path] $out_root/src/
+src_pfx_src = [dir_path] $src_root/src/
+
+cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
+                "-I$out_pfx_inc" "-I$src_pfx_inc"
+
+{hbmia obja}{*}: cxx.poptions += -DSFML_SYSTEM_STATIC_BUILD
+{hbmis objs}{*}: cxx.poptions += -DSFML_SYSTEM_SHARED_BUILD
+
+# Export options.
+lib{sfml-system}:
+{
+  cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc"
+  cxx.export.libs = $intf_libs
+}
+
+liba{sfml-system}: cxx.export.poptions += -DSFML_SYSTEM_STATIC
+libs{sfml-system}: cxx.export.poptions += -DSFML_SYSTEM_SHARED
+
+# For pre-releases use the complete version to make sure they cannot be used
+# in place of another pre-release or the final version. See the version module
+# for details on the version.* variable values.
+if $version.pre_release
+  lib{sfml-system}: bin.lib.version = "-$version.project_id"
+else
+  lib{sfml-system}: bin.lib.version = "-$version.major.$version.minor"
+
+# Don't install private headers.
+{hxx ixx txx}{*}: install = false

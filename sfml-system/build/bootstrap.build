@@ -1,0 +1,7 @@
+project = sfml-system
+
+using version
+using config
+using test
+using install
+using dist

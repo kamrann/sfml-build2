@@ -3,7 +3,8 @@ name: sfml-window
 version: 2.5.1
 project: sfml
 summary: The SFML Window module.
-license: ZLib
+license: Zlib
+description-file: README.md
 topics: C++, SFML
 url: https://github.com/SFML
 doc-url: https://www.sfml-dev.org/documentation/2.5.1/group__window.php

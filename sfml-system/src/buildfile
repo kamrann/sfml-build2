@@ -13,19 +13,37 @@ lib{sfml-system}: $pub/{$pub_hdrs}
 # Private headers and sources as well as dependencies.
 lib{sfml-system}: SFML/System/{hxx cxx}{*} $impl_libs $intf_libs
 
+# platform specific headers
+sfml_dep_libs =
+sfml_poptions =
 switch $config.sfml_system.platform
 {
     case 'windows'
+    {
 		lib{sfml-system}: SFML/System/Win32/{hxx cxx}{*}
+        sfml_dep_libs += winmm.lib
+    }
 	case 'linux'
+    {
+        lib{sfml-system}: SFML/System/Unix/{hxx cxx}{*}
+        sfml_dep_libs = -lpthread -lrt
+    }
 	case 'macos'
+    case 'openbsd'
+    {
+        lib{sfml-system}: SFML/System/Unix/{hxx cxx}{*}
+        sfml_dep_libs = -lpthread
+    }
     case 'ios'
     case 'freebsd'
-    case 'openbsd'
     case 'netbsd'
 		lib{sfml-system}: SFML/System/Unix/{hxx cxx}{*}
     case 'android'
+    {
+        lib{sfml-system}: SFML/System/Unix/{hxx cxx}{*}
 		lib{sfml-system}: SFML/System/Android/{hxx cxx}{*}
+        sfml_dep_libs = -landroid -llog
+    }
     default
         error 'Invalid SFML platform'
 }
@@ -37,7 +55,9 @@ out_pfx_src = [dir_path] $out_root/src/
 src_pfx_src = [dir_path] $src_root/src/
 
 cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
-                "-I$out_pfx_inc" "-I$src_pfx_inc"
+                "-I$out_pfx_inc" "-I$src_pfx_inc" \
+                $sfml_poptions
+cxx.libs =+ $sfml_dep_libs
 
 {hbmia obja}{*}: cxx.poptions += -DSFML_SYSTEM_STATIC_BUILD
 {hbmis objs}{*}: cxx.poptions += -DSFML_SYSTEM_SHARED_BUILD

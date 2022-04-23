@@ -13,14 +13,55 @@ lib{sfml-window}: $pub/{$pub_hdrs}
 # Private headers and sources as well as dependencies.
 lib{sfml-window}: SFML/Window/{hxx cxx}{*} $impl_libs $intf_libs
 
-switch $cxx.target.class
+gl_libs =
+switch $config.sfml_window.platform
 {
 	case 'windows'
+    {
 		lib{sfml-window}: SFML/Window/Win32/{hxx cxx}{*}
+        switch $cxx.target.system: path.match
+        {
+            case '*msvc*'
+                gl_libs += gdi32.lib
+            default
+                gl_libs += -lgdi32
+        }
+    }
 	case 'linux'
+    {
 		lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{*}
-	case 'macos'
+        gl_libs += -lrt -lm -ldl -lX11 -lpthread
+    }
+    case 'openbsd'
+    {
+        lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl}
+		lib{sfml-window}: SFML/Window/OpenBSD/{hxx cxx}{*}
+        gl_libs += -lrt -lm -ldl -lX11 -lpthread
+    }
+    case 'freebsd'
+    {
+        lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl}
+		lib{sfml-window}: SFML/Window/FreeBSD/{hxx cxx}{*}
+        gl_libs += -lrt -lm -ldl -lX11 -lpthread
+    }
+	case 'macosx'
+    {
 		lib{sfml-window}: SFML/Window/OSX/{hxx cxx}{*}
+        gl_libs += -framework Cocoa -framework IOKit -framework CoreFoundation
+    }
+    case 'ios'
+    {
+		lib{sfml-window}: SFML/Window/iOS/{hxx cxx}{*}
+        gl_libs += -framework Cocoa -framework IOKit -framework CoreFoundation
+    }
+    case 'android'
+    {
+        lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl -GlxContext}
+		lib{sfml-window}: SFML/Window/Android/{hxx cxx}{*}
+        gl_libs += -framework Cocoa -framework IOKit -framework CoreFoundation
+    }
+    default
+        error 'Invalid SFML platform'
 }
 
 # Build options.
@@ -31,6 +72,7 @@ src_pfx_src = [dir_path] $src_root/src/
 
 cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
                 "-I$out_pfx_inc" "-I$src_pfx_inc"
+cxx.libs += $gl_libs
 
 {hbmia obja}{*}: cxx.poptions += -DSFML_WINDOW_STATIC_BUILD
 {hbmis objs}{*}: cxx.poptions += -DSFML_WINDOW_SHARED_BUILD
@@ -39,7 +81,7 @@ cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
 lib{sfml-window}:
 {
   cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc"
-  cxx.export.libs = $intf_libs
+  cxx.export.libs = $intf_libs $gl_libs
 }
 
 liba{sfml-window}: cxx.export.poptions += -DSFML_WINDOW_STATIC

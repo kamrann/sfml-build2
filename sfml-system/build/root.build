@@ -13,3 +13,23 @@ hxx{*}: cxx.importable = true
 
 # The test target for cross-testing (running tests under Wine, etc).
 test.target = $cxx.target
+
+# supported values are currently:
+#
+# linux, macosx, windows, freebsd, openbsd
+# netbsd, android, ios
+config [string] config.sfml_system.platform ?= $config.sfml.platform
+
+# detect platform if not specified
+if ($config.sfml_system.platform == [null] || $config.sfml_system.platform == "")
+{
+    switch $cxx.target.class
+    {
+    	case 'windows'
+            config.sfml_system.platform = 'windows'
+    	case 'linux'
+            config.sfml_system.platform = 'linux'
+    	case 'macos'
+            config.sfml_system.platform = 'macosx'
+    }
+}

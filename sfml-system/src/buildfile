@@ -13,13 +13,21 @@ lib{sfml-system}: $pub/{$pub_hdrs}
 # Private headers and sources as well as dependencies.
 lib{sfml-system}: SFML/System/{hxx cxx}{*} $impl_libs $intf_libs
 
-switch $cxx.target.class
+switch $config.sfml_system.platform
 {
-	case 'windows'
+    case 'windows'
 		lib{sfml-system}: SFML/System/Win32/{hxx cxx}{*}
 	case 'linux'
 	case 'macos'
+    case 'ios'
+    case 'freebsd'
+    case 'openbsd'
+    case 'netbsd'
 		lib{sfml-system}: SFML/System/Unix/{hxx cxx}{*}
+    case 'android'
+		lib{sfml-system}: SFML/System/Android/{hxx cxx}{*}
+    default
+        error 'Invalid SFML platform'
 }
 
 # Build options.

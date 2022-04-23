@@ -19,6 +19,7 @@ test.target = $cxx.target
 # linux, macosx, windows, freebsd, openbsd
 # netbsd, android, ios
 config [string] config.sfml_window.platform ?= $config.sfml.platform
+config [bool] config.sfml_window.use_opengles ?= false
 
 # detect platform if not specified
 if ($config.sfml_window.platform == [null] || $config.sfml_window.platform == "")

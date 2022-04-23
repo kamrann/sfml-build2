@@ -11,54 +11,85 @@ pub_hdrs = $($pub/ pub_hdrs)
 lib{sfml-window}: $pub/{$pub_hdrs}
 
 # Private headers and sources as well as dependencies.
-lib{sfml-window}: SFML/Window/{hxx cxx}{*} $impl_libs $intf_libs
+lib{sfml-window}: SFML/Window/{hxx cxx}{* -EGLCheck -EglContext} $impl_libs $intf_libs
 
-gl_libs =
+if($config.sfml_window.use_opengles && $config.sfml_window.platform != 'ios')
+{
+    lib{sfml-window}: SFML/Window/{hxx cxx}{EGLCheck EglContext}
+}
+
+switch $config.sfml_window.platform
+{
+    case 'linux'
+    case 'openbsd'
+    case 'freebsd'
+    {
+        lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl -GlxContext -GlxExtensions}
+        if(!$config.sfml_window.use_opengles)
+        {
+            lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{GlxContext GlxExtensions}
+        }
+    }
+}
+
+platform_libs =
+platform_poptions =
 switch $config.sfml_window.platform
 {
 	case 'windows'
     {
 		lib{sfml-window}: SFML/Window/Win32/{hxx cxx}{*}
+        platform_poptions += -DUNICODE -D_UNICODE
         switch $cxx.target.system: path.match
         {
             case '*msvc*'
-                gl_libs += gdi32.lib
+                platform_libs += winmm.lib gdi32.lib
             default
-                gl_libs += -lgdi32
+                platform_libs += -lwinmm -lgdi32
         }
     }
 	case 'linux'
     {
-		lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{*}
-        gl_libs += -lrt -lm -ldl -lX11 -lpthread
+		lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{JoystickImpl}
+        if($config.sfml_window.use_opengles)
+        {
+            platform_libs += -lEGL -lGLESv1_CM
+        }
+        platform_libs += -lX11 -ludev
     }
     case 'openbsd'
     {
-        lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl}
 		lib{sfml-window}: SFML/Window/OpenBSD/{hxx cxx}{*}
-        gl_libs += -lrt -lm -ldl -lX11 -lpthread
+        platform_libs += -lX11
     }
     case 'freebsd'
     {
-        lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl}
 		lib{sfml-window}: SFML/Window/FreeBSD/{hxx cxx}{*}
-        gl_libs += -lrt -lm -ldl -lX11 -lpthread
+        platform_libs += -lX11
     }
 	case 'macosx'
     {
 		lib{sfml-window}: SFML/Window/OSX/{hxx cxx}{*}
-        gl_libs += -framework Cocoa -framework IOKit -framework CoreFoundation
+        platform_libs += -framework Foundation -framework AppKit -framework IOKit -framework Carbon
     }
     case 'ios'
     {
 		lib{sfml-window}: SFML/Window/iOS/{hxx cxx}{*}
-        gl_libs += -framework Cocoa -framework IOKit -framework CoreFoundation
+        if($config.sfml_window.use_opengles)
+        {
+            platform_libs += -framework OpenGLES
+        }
+        platform_libs += -framework Foundation -framework UIKit -framework CoreGraphics -framework QuartzCore -framework CoreMotion
     }
     case 'android'
     {
         lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl -GlxContext}
 		lib{sfml-window}: SFML/Window/Android/{hxx cxx}{*}
-        gl_libs += -framework Cocoa -framework IOKit -framework CoreFoundation
+        if($config.sfml_window.use_opengles)
+        {
+            platform_libs += -lEGL -lGLESv1_CM
+        }
+        platform_libs += -landroid
     }
     default
         error 'Invalid SFML platform'
@@ -72,7 +103,7 @@ src_pfx_src = [dir_path] $src_root/src/
 
 cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
                 "-I$out_pfx_inc" "-I$src_pfx_inc"
-cxx.libs += $gl_libs
+cxx.libs += $platform_libs
 
 {hbmia obja}{*}: cxx.poptions += -DSFML_WINDOW_STATIC_BUILD
 {hbmis objs}{*}: cxx.poptions += -DSFML_WINDOW_SHARED_BUILD
@@ -81,11 +112,16 @@ cxx.libs += $gl_libs
 lib{sfml-window}:
 {
   cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc"
-  cxx.export.libs = $intf_libs $gl_libs
+  cxx.export.libs = $intf_libs $platform_libs
 }
 
 liba{sfml-window}: cxx.export.poptions += -DSFML_WINDOW_STATIC
 libs{sfml-window}: cxx.export.poptions += -DSFML_WINDOW_SHARED
+
+if($config.sfml_window.platform == 'macos')
+{
+    liba{sfml-window}: cxx.libs += -ObjC
+}
 
 # For pre-releases use the complete version to make sure they cannot be used
 # in place of another pre-release or the final version. See the version module

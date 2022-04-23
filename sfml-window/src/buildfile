@@ -1,4 +1,4 @@
-intf_libs = sfml-system%lib{sfml-system}
+import intf_libs = sfml-system%lib{sfml-system}
 impl_libs = # Implementation dependencies.
 
 # Public headers.

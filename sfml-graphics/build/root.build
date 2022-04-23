@@ -1,0 +1,36 @@
+cxx.std = latest
+
+using cxx
+
+hxx{*}: extension = hpp
+ixx{*}: extension = ipp
+txx{*}: extension = tpp
+cxx{*}: extension = cpp
+
+# Assume headers are importable unless stated otherwise.
+#
+hxx{*}: cxx.importable = true
+
+# The test target for cross-testing (running tests under Wine, etc).
+test.target = $cxx.target
+
+# supported values are currently:
+#
+# linux, macosx, windows, freebsd, openbsd
+# netbsd, android, ios
+config [string] config.sfml_graphics.platform ?= $config.sfml.platform
+config [bool] config.sfml_graphics.use_opengles ?= false
+
+# detect platform if not specified
+if ($config.sfml_graphics.platform == [null] || $config.sfml_graphics.platform == "")
+{
+    switch $cxx.target.class
+    {
+    	case 'windows'
+            config.sfml_graphics.platform = 'windows'
+    	case 'linux'
+            config.sfml_graphics.platform = 'linux'
+    	case 'macos'
+            config.sfml_graphics.platform = 'macosx'
+    }
+}

@@ -17,7 +17,7 @@ depends: sfml-system ^2.5.1
 You can specify your target platform directly or let build2 try to auto-detect your system:
 
 ```
-config.sfml.platform = # SFML platform identifier
+config.sfml_system.platform = # SFML platform identifier
 ```
 
 Supported platform identifiers are:

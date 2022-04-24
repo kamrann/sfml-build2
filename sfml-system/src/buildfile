@@ -45,7 +45,7 @@ switch $config.sfml_system.platform
         sfml_dep_libs = -landroid -llog
     }
     default
-        error 'Invalid SFML platform'
+        fail 'Invalid SFML platform'
 }
 
 # Build options.

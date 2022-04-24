@@ -16,7 +16,7 @@ test.target = $cxx.target
 
 # supported values are currently:
 #
-# linux, macosx, windows, freebsd, openbsd
+# linux, macos, windows, freebsd, openbsd
 # netbsd, android, ios
 config [string] config.sfml_network.platform ?= $config.sfml.platform
 
@@ -34,6 +34,6 @@ if ($config.sfml_network.platform == [null] || $config.sfml_network.platform == 
         case 'bsd'
             config.sfml_network.platform = 'freebsd'
         default
-            error 'Failed to detect SFML platform'
+            fail 'Failed to detect SFML platform'
     }
 }

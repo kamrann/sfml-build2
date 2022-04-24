@@ -24,7 +24,7 @@ Supported platform identifiers are:
 
 ```
 linux
-macosx
+macos
 windows
 freebsd
 openbsd

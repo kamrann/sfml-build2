@@ -21,12 +21,12 @@ switch $config.sfml_network.platform
 	case 'linux'
     case 'openbsd'
     case 'freebsd'
-	case 'macosx'
+	case 'macos'
     case 'ios'
     case 'android'
         lib{sfml-network}: SFML/Window/Unix/{hxx cxx}{*}
     default
-        error 'Invalid SFML platform'
+        fail 'Invalid SFML platform'
 }
 
 # Build options.

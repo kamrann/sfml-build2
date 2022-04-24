@@ -27,6 +27,8 @@ jobs:
       - uses: build2/setup-build2-github-action@v2
         with:
           build2-version: staged
+      - name: Install dependencies
+        run: sudo apt install -y libx11-dev libxrandr-dev libudev-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev
       - name: Configure
         run: bdep init -C @${{ matrix.config.compiler_cc }} cc config.cxx=${{ matrix.config.compiler_cxx }}
       - name: Build

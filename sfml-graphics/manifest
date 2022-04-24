@@ -14,3 +14,6 @@ builds: default
 depends: * build2 >= 0.14.0
 depends: * bpkg >= 0.14.0
 depends: sfml-window == $
+depends: libfreetype ^2.11.0
+depends: stb_image ^2.26.0
+depends: stb_image_write ^1.15.0

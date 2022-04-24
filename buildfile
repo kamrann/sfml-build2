@@ -1,3 +1,2 @@
-import pkgs = sfml-system/ sfml-window/
-
-./ : $pkgs
+import pkgs = {sfml*/}
+./: $pkgs

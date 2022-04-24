@@ -2,7 +2,7 @@
 location: sfml-system/
 :
 location: sfml-window/
-# :
-# location: sfml-network/
-# :
-# location: sfml-graphics/
+:
+location: sfml-network/
+:
+location: sfml-graphics/

@@ -1,4 +1,7 @@
 import intf_libs = sfml-window%lib{sfml-window}
+import intf_libs += libfreetype%lib{freetype}
+import intf_libs += stb_image%lib{stb_image}
+import intf_libs += stb_image_write%lib{stb_image_write}
 impl_libs = # Implementation dependencies.
 
 # Public headers.
@@ -11,7 +14,7 @@ pub_hdrs = $($pub/ pub_hdrs)
 lib{sfml-graphics}: $pub/{$pub_hdrs}
 
 # Private headers and sources as well as dependencies.
-lib{sfml-graphics}: SFML/Window/{hxx cxx}{* -GLLoader} $impl_libs $intf_libs
+lib{sfml-graphics}: SFML/Graphics/{hxx cxx}{* -GLLoader} $impl_libs $intf_libs
 
 platform_libs =
 if($config.sfml_graphics.use_opengles)
@@ -27,8 +30,7 @@ if($config.sfml_graphics.use_opengles)
 }
 else
 {
-    lib{sfml-graphics}: SFML/Window/{hxx cxx}{GLLoader}
-    platform_libs += -lOpenGL
+    lib{sfml-graphics}: SFML/Graphics/{hxx cxx}{GLLoader}
     if($config.sfml_graphics.platform == 'linux')
     {
         platform_libs += -lX11

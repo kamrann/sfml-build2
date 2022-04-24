@@ -23,6 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: build2/setup-build2-github-action@v2
+        with:
+          build2-version: staged
       - name: Configure
         run: bdep init -C @${{ matrix.config.compiler_cc }} cc config.cxx=${{ matrix.config.compiler_cxx }}
       - name: Build
@@ -44,6 +46,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: build2/setup-build2-github-action@v2
+      with:
+        build2-version: staged
     - name: Configure
       run: bdep init -C @${{ matrix.config.compiler_cc }} cc config.cxx=${{ matrix.config.compiler_cxx }}
     - name: Build

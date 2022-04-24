@@ -31,6 +31,10 @@ if ($config.sfml_graphics.platform == [null] || $config.sfml_graphics.platform =
     	case 'linux'
             config.sfml_graphics.platform = 'linux'
     	case 'macos'
-            config.sfml_graphics.platform = 'macosx'
+            config.sfml_graphics.platform = 'macos'
+        case 'bsd'
+            config.sfml_graphics.platform = 'freebsd'
+        default
+            error 'Failed to detect SFML platform'
     }
 }

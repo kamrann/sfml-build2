@@ -30,6 +30,10 @@ if ($config.sfml_system.platform == [null] || $config.sfml_system.platform == ""
     	case 'linux'
             config.sfml_system.platform = 'linux'
     	case 'macos'
-            config.sfml_system.platform = 'macosx'
+            config.sfml_system.platform = 'macos'
+        case 'bsd'
+            config.sfml_system.platform = 'freebsd'
+        default
+            error 'Failed to detect SFML platform'
     }
 }

@@ -1,0 +1,72 @@
+name: build2
+
+on: [push]
+
+jobs:
+
+  # Job for building on Ubuntu
+  Ubuntu:
+    name: ${{matrix.config.name}}
+    runs-on: ${{matrix.config.os}}
+    strategy:
+      matrix:
+        config:
+          - name: Ubuntu gcc
+            os: ubuntu-latest
+            compiler_cc: gcc
+            compiler_cxx: g++
+          - name: Ubuntu clang
+            os: ubuntu-latest
+            compiler_cc: clang
+            compiler_cxx: clang++
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: build2/setup-build2-github-action@v2
+      - name: Configure
+        run: bdep init -C @${{ matrix.config.compiler_cc }} cc config.cxx=${{ matrix.config.compiler_cxx }}
+      - name: Build
+        run: b
+
+  # Job for building on MacOS
+  MacOS:
+    name: ${{matrix.config.name}}
+    runs-on: ${{matrix.config.os}}
+    strategy:
+      matrix:
+        config:
+          - name: MacOS clang
+            os: macos-latest
+            build_type: Debug
+            compiler_cc: clang
+            compiler_cxx: clang++
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: build2/setup-build2-github-action@v2
+    - name: Configure
+      run: bdep init -C @${{ matrix.config.compiler_cc }} cc config.cxx=${{ matrix.config.compiler_cxx }}
+    - name: Build
+      run: b
+
+  # Windows:
+  #   name: ${{matrix.config.name}}
+  #   runs-on: ${{matrix.config.os}}
+  #   strategy:
+  #     matrix:
+  #       config:
+  #           - name: Windows vc++ Debug
+  #             os: windows-latest
+  #             build_type: Debug
+  #           - name: Windows vc++ Release
+  #             os: windows-latest
+  #             build_type: Release
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: Rookfighter/setup-build2@master
+  #   - name: Configure
+  #     run: bdep init -C ../least-squares-cpp-msvc @msvc
+  #   - name: Build
+  #     run: b
+  #   - name: Test
+  #     run: b test

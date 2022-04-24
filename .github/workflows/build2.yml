@@ -21,7 +21,9 @@ jobs:
             compiler_cxx: clang++
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
       - uses: build2/setup-build2-github-action@v2
         with:
           build2-version: staged
@@ -44,7 +46,9 @@ jobs:
             compiler_cxx: clang++
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+      with:
+        submodules: true
     - uses: build2/setup-build2-github-action@v2
       with:
         build2-version: staged

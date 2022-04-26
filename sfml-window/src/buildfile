@@ -69,8 +69,8 @@ switch $config.sfml_window.platform
     }
 	case 'macos'
     {
-		lib{sfml-window}: SFML/Window/OSX/{h hxx cxx}{*} SFML/Window/OSX/cxx{*.m *.mm}
-        platform_libs += -framework Foundation -framework AppKit -framework IOKit -framework Carbon
+		lib{sfml-window}: SFML/Window/OSX/{h hxx cxx}{*} SFML/Window/OSX/cxx{*.mm} SFML/Window/OSX/c{*.m}
+        platform_libs += -framework Cocoa -framework Foundation -framework AppKit -framework IOKit -framework Carbon
     }
     case 'ios'
     {
@@ -102,7 +102,8 @@ out_pfx_src = [dir_path] $out_root/src/
 src_pfx_src = [dir_path] $src_root/src/
 
 cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
-                "-I$out_pfx_inc" "-I$src_pfx_inc"
+                "-I$out_pfx_inc" "-I$src_pfx_inc" \
+                $platform_poptions
 cxx.libs += $platform_libs
 
 {hbmia obja}{*}: cxx.poptions += -DSFML_WINDOW_STATIC_BUILD
@@ -111,7 +112,7 @@ cxx.libs += $platform_libs
 # Export options.
 lib{sfml-window}:
 {
-  cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc"
+  cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc" $platform_poptions
   cxx.export.libs = $intf_libs $platform_libs
 }
 
@@ -120,7 +121,7 @@ libs{sfml-window}: cxx.export.poptions += -DSFML_WINDOW_SHARED
 
 if($config.sfml_window.platform == 'macos')
 {
-    liba{sfml-window}: cxx.libs += -ObjC
+    liba{sfml-window}: cxx.coptions += -ObjC
 }
 
 # For pre-releases use the complete version to make sure they cannot be used

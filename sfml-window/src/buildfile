@@ -69,7 +69,7 @@ switch $config.sfml_window.platform
     }
 	case 'macos'
     {
-		lib{sfml-window}: SFML/Window/OSX/{hxx cxx}{*} SFML/Window/OSX/cxx{*.m *.mm}
+		lib{sfml-window}: SFML/Window/OSX/{h hxx cxx}{*} SFML/Window/OSX/cxx{*.m *.mm}
         platform_libs += -framework Foundation -framework AppKit -framework IOKit -framework Carbon
     }
     case 'ios'

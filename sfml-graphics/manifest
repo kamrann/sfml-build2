@@ -1,6 +1,6 @@
 : 1
 name: sfml-graphics
-version: 2.5.1
+version: 2.5.1-a.0.z
 project: sfml
 summary: The SFML Graphics module.
 license: Zlib

@@ -17,14 +17,14 @@ platform_libs =
 switch $config.sfml_network.platform
 {
 	case 'windows'
-        lib{sfml-network}: SFML/Window/Win32/{hxx cxx}{*}
+        lib{sfml-network}: SFML/Network/Win32/{hxx cxx}{*}
 	case 'linux'
     case 'openbsd'
     case 'freebsd'
 	case 'macos'
     case 'ios'
     case 'android'
-        lib{sfml-network}: SFML/Window/Unix/{hxx cxx}{*}
+        lib{sfml-network}: SFML/Network/Unix/{hxx cxx}{*}
     default
         fail 'Invalid SFML platform'
 }

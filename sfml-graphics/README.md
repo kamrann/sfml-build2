@@ -2,6 +2,8 @@
 
 # sfml-graphics build2 package
 
+[![cppget](https://img.shields.io/website/https/cppget.org/sfml-graphics.svg?down_message=offline&label=cppget.org&up_color=blue&up_message=online)](https://cppget.org/sfml-graphics)
+
 [SFML](https://www.sfml-dev.org) is a simple, fast, cross-platform and object-oriented multimedia API. It provides access to windowing, graphics, audio and network. It is written in C++, and has bindings for various languages such as C, .Net, Ruby, Python.
 
 This project builds and defines the build2 package for the `Graphics` module of SFML.

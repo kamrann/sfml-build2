@@ -1,0 +1,25 @@
+
+# supported values are currently:
+#
+# linux, macos, windows, freebsd, openbsd
+# netbsd, android, ios
+sfml_platform = $config.sfml.platform
+sfml_use_opengles = false
+
+# detect platform if not specified
+if ($sfml_platform == [null] || $sfml_platform == "")
+{
+    switch $cxx.target.class
+    {
+    	case 'windows'
+            sfml_platform = 'windows'
+    	case 'linux'
+            sfml_platform = 'linux'
+    	case 'macos'
+            sfml_platform = 'macos'
+        case 'bsd'
+            sfml_platform = 'freebsd'
+        default
+            fail 'Failed to detect SFML platform'
+    }
+}

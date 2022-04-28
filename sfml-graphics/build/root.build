@@ -14,27 +14,6 @@ hxx{*}: cxx.importable = true
 # The test target for cross-testing (running tests under Wine, etc).
 test.target = $cxx.target
 
-# supported values are currently:
-#
-# linux, macos, windows, freebsd, openbsd
-# netbsd, android, ios
-config [string] config.sfml_graphics.platform ?= $config.sfml.platform
-config [bool] config.sfml_graphics.use_opengles ?= false
-
-# detect platform if not specified
-if ($config.sfml_graphics.platform == [null] || $config.sfml_graphics.platform == "")
-{
-    switch $cxx.target.class
-    {
-    	case 'windows'
-            config.sfml_graphics.platform = 'windows'
-    	case 'linux'
-            config.sfml_graphics.platform = 'linux'
-    	case 'macos'
-            config.sfml_graphics.platform = 'macos'
-        case 'bsd'
-            config.sfml_graphics.platform = 'freebsd'
-        default
-            fail 'Failed to detect SFML platform'
-    }
-}
+source build/sfml_common.build
+config [string] config.sfml_graphics.platform ?= $sfml_platform
+config [bool] config.sfml_graphics.use_opengles ?= $sfml_use_opengles

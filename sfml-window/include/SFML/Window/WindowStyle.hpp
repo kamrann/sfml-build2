@@ -1,0 +1,1 @@
+../../../../upstream/include/SFML/Window/WindowStyle.hpp

@@ -1,0 +1,1 @@
+../../../../upstream/src/SFML/Window/SensorManager.hpp

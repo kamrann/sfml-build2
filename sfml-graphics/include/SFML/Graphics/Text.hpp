@@ -1,0 +1,1 @@
+../../../../upstream/include/SFML/Graphics/Text.hpp

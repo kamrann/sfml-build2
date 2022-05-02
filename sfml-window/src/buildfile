@@ -69,7 +69,9 @@ switch $config.sfml_window.platform
     }
 	case 'macos'
     {
-		lib{sfml-window}: SFML/Window/OSX/{h hxx cxx}{*} SFML/Window/OSX/cxx{*.mm} SFML/Window/OSX/c{*.m}
+		lib{sfml-window}: SFML/Window/OSX/{h hxx cxx}{*}
+        lib{sfml-window}: SFML/Window/OSX/c{*.m}
+        lib{sfml-window}: SFML/Window/OSX/c{*.mm}
         platform_libs += -framework Cocoa -framework Foundation -framework AppKit -framework IOKit -framework Carbon
     }
     case 'ios'
@@ -105,6 +107,10 @@ cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
                 "-I$out_pfx_inc" "-I$src_pfx_inc" \
                 $platform_poptions
 cxx.libs += $platform_libs
+c.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
+              "-I$out_pfx_inc" "-I$src_pfx_inc" \
+              $platform_poptions
+c.libs += $platform_libs
 
 {hbmia obja}{*}: cxx.poptions += -DSFML_WINDOW_STATIC_BUILD
 {hbmis objs}{*}: cxx.poptions += -DSFML_WINDOW_SHARED_BUILD

@@ -23,3 +23,9 @@ if ($sfml_platform == [null] || $sfml_platform == "")
             fail 'Failed to detect SFML platform'
     }
 }
+
+switch $cxx.id
+{
+    case 'msvc'
+        cxx.poptions += -D_CRT_SECURE_NO_DEPRECATE -D_SCL_SECURE_NO_WARNINGS
+}

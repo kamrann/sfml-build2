@@ -16,3 +16,7 @@ test.target = $cxx.target
 
 source build/sfml_common.build
 config [string] config.sfml_network.platform ?= $sfml_platform
+
+# definition needed for building SFML
+# but must be disabled for all importing libraries
+cxx.poptions += -DSFML_NETWORK_EXPORTS

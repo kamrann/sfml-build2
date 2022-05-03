@@ -37,21 +37,21 @@ platform_poptions =
 platform_coptions =
 switch $config.sfml_window.platform
 {
-	case 'windows'
+    case 'windows'
     {
-		lib{sfml-window}: SFML/Window/Win32/{hxx cxx}{*}
+        lib{sfml-window}: SFML/Window/Win32/{hxx cxx}{*}
         platform_poptions += -DUNICODE -D_UNICODE
-        switch $cxx.target.system: path.match
+        switch $cxx.id
         {
-            case '*msvc*'
-                platform_libs += winmm.lib gdi32.lib
+            case 'msvc'
+                platform_libs += winmm.lib gdi32.lib opengl32.lib advapi32.lib
             default
-                platform_libs += -lwinmm -lgdi32
+                platform_libs += -lwinmm -lgdi32 -lopengl32 -ladvapi32
         }
     }
-	case 'linux'
+    case 'linux'
     {
-		lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{JoystickImpl}
+        lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{JoystickImpl}
         if($config.sfml_window.use_opengles)
         {
             platform_libs += -lEGL -lGLESv1_CM
@@ -60,17 +60,17 @@ switch $config.sfml_window.platform
     }
     case 'openbsd'
     {
-		lib{sfml-window}: SFML/Window/OpenBSD/{hxx cxx}{*}
+        lib{sfml-window}: SFML/Window/OpenBSD/{hxx cxx}{*}
         platform_libs += -lX11
     }
     case 'freebsd'
     {
-		lib{sfml-window}: SFML/Window/FreeBSD/{hxx cxx}{*}
+        lib{sfml-window}: SFML/Window/FreeBSD/{hxx cxx}{*}
         platform_libs += -lX11
     }
-	case 'macos'
+    case 'macos'
     {
-		lib{sfml-window}: SFML/Window/OSX/{h hxx cxx}{*}
+        lib{sfml-window}: SFML/Window/OSX/{h hxx cxx}{*}
         lib{sfml-window}: SFML/Window/OSX/c{*.m}
         lib{sfml-window}: SFML/Window/OSX/cxx{*.mm}
         platform_coptions += -objC
@@ -78,7 +78,7 @@ switch $config.sfml_window.platform
     }
     case 'ios'
     {
-		lib{sfml-window}: SFML/Window/iOS/{hxx cxx}{*}
+        lib{sfml-window}: SFML/Window/iOS/{hxx cxx}{*}
         if($config.sfml_window.use_opengles)
         {
             platform_libs += -framework OpenGLES
@@ -88,7 +88,7 @@ switch $config.sfml_window.platform
     case 'android'
     {
         lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl -GlxContext}
-		lib{sfml-window}: SFML/Window/Android/{hxx cxx}{*}
+        lib{sfml-window}: SFML/Window/Android/{hxx cxx}{*}
         if($config.sfml_window.use_opengles)
         {
             platform_libs += -lEGL -lGLESv1_CM
@@ -117,7 +117,7 @@ c.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
 c.coptions += $platform_coptions
 c.libs += $platform_libs
 
-{hbmia obja}{*}: cxx.poptions += -DSFML_WINDOW_STATIC_BUILD
+{hbmia obja}{*}: cxx.poptions += -DSFML_WINDOW_STATIC_BUILD -DSFML_STATIC
 {hbmis objs}{*}: cxx.poptions += -DSFML_WINDOW_SHARED_BUILD
 
 # Export options.

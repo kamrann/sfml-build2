@@ -21,7 +21,7 @@ if($config.sfml_graphics.use_opengles)
 {
     switch $config.sfml_graphics.platform
     {
-    	case 'linux'
+        case 'linux'
         case 'android'
             platform_libs += -lEGL -lGLESv1_CM
         case 'ios'

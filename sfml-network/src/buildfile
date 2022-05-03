@@ -16,15 +16,15 @@ lib{sfml-network}: SFML/Network/{hxx cxx}{*} $impl_libs $intf_libs
 platform_libs =
 switch $config.sfml_network.platform
 {
-	case 'windows'
+    case 'windows'
     {
         lib{sfml-network}: SFML/Network/Win32/{hxx cxx}{*}
         platform_libs += ws2_32.lib
     }
-	case 'linux'
+    case 'linux'
     case 'openbsd'
     case 'freebsd'
-	case 'macos'
+    case 'macos'
     case 'ios'
     case 'android'
         lib{sfml-network}: SFML/Network/Unix/{hxx cxx}{*}

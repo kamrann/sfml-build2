@@ -11,11 +11,11 @@ if ($sfml_platform == [null] || $sfml_platform == "")
 {
     switch $cxx.target.class
     {
-    	case 'windows'
+        case 'windows'
             sfml_platform = 'windows'
-    	case 'linux'
+        case 'linux'
             sfml_platform = 'linux'
-    	case 'macos'
+        case 'macos'
             sfml_platform = 'macos'
         case 'bsd'
             sfml_platform = 'freebsd'

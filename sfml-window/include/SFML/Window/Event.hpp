@@ -1,1 +1,0 @@
-../../../../upstream/include/SFML/Window/Event.hpp

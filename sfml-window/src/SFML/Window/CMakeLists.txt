@@ -1,1 +1,0 @@
-../../../../upstream/src/SFML/Window/CMakeLists.txt

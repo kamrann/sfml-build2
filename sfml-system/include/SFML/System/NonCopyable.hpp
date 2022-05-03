@@ -1,1 +1,0 @@
-../../../../upstream/include/SFML/System/NonCopyable.hpp

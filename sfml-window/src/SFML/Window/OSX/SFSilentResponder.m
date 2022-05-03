@@ -1,1 +1,0 @@
-../../../../../upstream/src/SFML/Window/OSX/SFSilentResponder.m

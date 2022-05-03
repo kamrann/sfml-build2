@@ -1,0 +1,2 @@
+include/SFML/Window symlink=dir
+src/SFML/Window symlink=dir

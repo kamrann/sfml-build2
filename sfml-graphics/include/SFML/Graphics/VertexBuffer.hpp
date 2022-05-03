@@ -1,1 +1,0 @@
-../../../../upstream/include/SFML/Graphics/VertexBuffer.hpp

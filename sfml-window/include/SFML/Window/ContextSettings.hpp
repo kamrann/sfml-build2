@@ -1,1 +1,0 @@
-../../../../upstream/include/SFML/Window/ContextSettings.hpp

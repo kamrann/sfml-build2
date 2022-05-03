@@ -1,1 +1,0 @@
-../../../../upstream/include/SFML/System/NativeActivity.hpp

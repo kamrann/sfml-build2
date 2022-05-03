@@ -1,1 +1,0 @@
-../../../../../upstream/src/SFML/Window/Android/WindowImplAndroid.hpp

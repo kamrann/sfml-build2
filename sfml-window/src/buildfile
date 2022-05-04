@@ -81,12 +81,12 @@ switch $config.sfml_window.platform
           obja{"$filename".a.o}: file{"$filepath"}
           {{
              diag obj-c ($<[0])
-             $c.path $c.poptions $cc.poptions $c.coptions $cc.coptions -c $path($<[0]) -o $path($>)
+             $c.path $c.poptions $cc.poptions $c.coptions -ObjC $cc.coptions -c $path($<[0]) -o $path($>)
           }}
           objs{"$filename".dylib.o}: file{"$filepath"}
           {{
              diag objective-c ($<[0])
-             $c.path $c.poptions $cc.poptions $c.coptions $cc.coptions -c $path($<[0]) -o $path($>)
+             $c.path $c.poptions $cc.poptions $c.coptions -ObjC $cc.coptions -c $path($<[0]) -o $path($>)
           }}
 
           liba{sfml-window}: obja{"$filename".a.o}
@@ -99,19 +99,18 @@ switch $config.sfml_window.platform
           obja{"$filename".a.o}: file{"$filepath"}
           {{
              diag obj-c++ ($<[0])
-             $cxx.path $cxx.poptions $cc.poptions $cxx.coptions $cc.coptions -c $path($<[0]) -o $path($>)
+             $cxx.path $cxx.poptions $cc.poptions $cxx.coptions -ObjC++ $cc.coptions -c $path($<[0]) -o $path($>)
           }}
           objs{"$filename".dylib.o}: file{"$filepath"}
           {{
              diag objective-c ($<[0])
-             $c.path $c.poptions $cc.poptions $c.coptions $cc.coptions -c $path($<[0]) -o $path($>)
+             $cxx.path $cxx.poptions $cc.poptions $cxx.coptions -ObjC++ $cc.coptions -c $path($<[0]) -o $path($>)
           }}
 
           liba{sfml-window}: obja{"$filename".a.o}
           libs{sfml-window}: objs{"$filename".dylib.o}
         }
 
-        platform_coptions += -objC
         platform_libs += -framework Cocoa -framework Foundation -framework CoreFoundation -framework AppKit -framework IOKit -framework Carbon
     }
     case 'ios'

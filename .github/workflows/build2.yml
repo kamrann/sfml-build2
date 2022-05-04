@@ -81,6 +81,6 @@ jobs:
       with:
         build2-version: staged
     - name: Configure
-      run: bdep init -C @${{ matrix.config.compiler_cc }}
+      run: bdep init -C ../sfml-${{ matrix.config.compiler_cc }} @${{ matrix.config.compiler_cc }}
     - name: Build
       run: b

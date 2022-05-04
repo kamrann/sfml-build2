@@ -78,14 +78,14 @@ switch $config.sfml_window.platform
         for filepath: $objc_files
         {
           filename = $name($filepath)
-          obja{"$filename".a.o}: file{"$filepath"}
+          obja{"$filename".a.o}: file{"$filepath"} $impl_libs $intf_libs
           {{
              diag obj-c ($<[0])
              $c.path $c.poptions $cc.poptions $c.coptions -ObjC $cc.coptions -c $path($<[0]) -o $path($>)
           }}
-          objs{"$filename".dylib.o}: file{"$filepath"}
+          objs{"$filename".dylib.o}: file{"$filepath"} $impl_libs $intf_libs
           {{
-             diag objective-c ($<[0])
+             diag obj-c ($<[0])
              $c.path $c.poptions $cc.poptions $c.coptions -ObjC $cc.coptions -c $path($<[0]) -o $path($>)
           }}
 
@@ -96,14 +96,14 @@ switch $config.sfml_window.platform
         for filepath: $objcxx_files
         {
           filename = $name($filepath)
-          obja{"$filename".a.o}: file{"$filepath"}
+          obja{"$filename".a.o}: file{"$filepath"} $impl_libs $intf_libs
           {{
              diag obj-c++ ($<[0])
              $cxx.path $cxx.poptions $cc.poptions $cxx.coptions -ObjC++ $cc.coptions -c $path($<[0]) -o $path($>)
           }}
-          objs{"$filename".dylib.o}: file{"$filepath"}
+          objs{"$filename".dylib.o}: file{"$filepath"} $impl_libs $intf_libs
           {{
-             diag objective-c ($<[0])
+             diag obj-c++ ($<[0])
              $cxx.path $cxx.poptions $cc.poptions $cxx.coptions -ObjC++ $cc.coptions -c $path($<[0]) -o $path($>)
           }}
 

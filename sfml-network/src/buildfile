@@ -52,7 +52,7 @@ lib{sfml-network}:
   cxx.export.libs = $intf_libs $platform_libs
 }
 
-liba{sfml-network}: cxx.export.poptions += -DSFML_WINDOW_STATIC
+liba{sfml-network}: cxx.export.poptions += -DSFML_WINDOW_STATIC -DSFML_STATIC
 libs{sfml-network}: cxx.export.poptions += -DSFML_WINDOW_SHARED
 
 # For pre-releases use the complete version to make sure they cannot be used

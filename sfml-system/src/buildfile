@@ -69,7 +69,7 @@ lib{sfml-system}:
   cxx.export.libs = $intf_libs
 }
 
-liba{sfml-system}: cxx.export.poptions += -DSFML_SYSTEM_STATIC
+liba{sfml-system}: cxx.export.poptions += -DSFML_SYSTEM_STATIC -DSFML_STATIC
 libs{sfml-system}: cxx.export.poptions += -DSFML_SYSTEM_SHARED
 
 # For pre-releases use the complete version to make sure they cannot be used

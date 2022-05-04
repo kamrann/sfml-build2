@@ -57,7 +57,7 @@ lib{sfml-graphics}:
   cxx.export.libs = $intf_libs $platform_libs
 }
 
-liba{sfml-graphics}: cxx.export.poptions += -DSFML_GRAPHICS_STATIC
+liba{sfml-graphics}: cxx.export.poptions += -DSFML_GRAPHICS_STATIC -DSFML_STATIC
 libs{sfml-graphics}: cxx.export.poptions += -DSFML_GRAPHICS_SHARED
 
 # For pre-releases use the complete version to make sure they cannot be used

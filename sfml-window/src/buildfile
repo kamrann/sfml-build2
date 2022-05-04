@@ -164,7 +164,7 @@ lib{sfml-window}:
   cxx.export.libs = $intf_libs $platform_libs
 }
 
-liba{sfml-window}: cxx.export.poptions += -DSFML_WINDOW_STATIC
+liba{sfml-window}: cxx.export.poptions += -DSFML_WINDOW_STATIC -DSFML_STATIC
 libs{sfml-window}: cxx.export.poptions += -DSFML_WINDOW_SHARED
 
 # For pre-releases use the complete version to make sure they cannot be used

@@ -72,24 +72,41 @@ switch $config.sfml_window.platform
         define m: file
         m{*}: extension = m
 
-        objc_files = SFML/Window/OSX/*.m
-        objc_files = $regex.apply($objc_files,'(.+)\.m','\1')
+        objc_files = SFML/Window/OSX/SFApplicationDelegate \
+                     SFML/Window/OSX/SFApplication \
+                     SFML/Window/OSX/SFSilentResponder \
+                     SFML/Window/OSX/SFWindow
 
-        objcxx_files = SFML/Window/OSX/*.mm
-        objcxx_files = $regex.apply($objcxx_files,'(.+)\.mm','\1')
+        objcxx_files = SFML/Window/OSX/AutoreleasePoolWrapper \
+                       SFML/Window/OSX/ClipboardImpl \
+                       SFML/Window/OSX/CursorImpl \
+                       SFML/Window/OSX/InputImpl \
+                       SFML/Window/OSX/SFContext \
+                       SFML/Window/OSX/SFOpenGLView+keyboard \
+                       SFML/Window/OSX/SFOpenGLView+mouse \
+                       SFML/Window/OSX/SFWindowController \
+                       SFML/Window/OSX/cg_sf_conversion \
+                       SFML/Window/OSX/cpp_objc_conversion \
+                       SFML/Window/OSX/HIDInputManager \
+                       SFML/Window/OSX/NSImage+raw \
+                       SFML/Window/OSX/SFKeyboardModifiersHelper \
+                       SFML/Window/OSX/SFOpenGLView \
+                       SFML/Window/OSX/SFViewController \
+                       SFML/Window/OSX/WindowImplCocoa
+
 
         [rule_hint=cxx] libul{sfml-window-meta}: $impl_libs $intf_libs
 
         for n: $objc_files
         {
-          obja{$(n).a.o}: m{$n}
-          objs{$(n).so.o}: m{$n}
+            obja{$(n).a.o}: m{$n}
+            objs{$(n).so.o}: m{$n}
         }
 
         for n: $objcxx_files
         {
-          obja{$(n).a.o}: mm{$n}
-          objs{$(n).so.o}: mm{$n}
+            obja{$(n).a.o}: mm{$n}
+            objs{$(n).so.o}: mm{$n}
         }
 
         liba{sfml-window}: obja{$regex.apply($objc_files,'(.+)','\1.a.o')}
@@ -100,64 +117,64 @@ switch $config.sfml_window.platform
 
         obja{~'/(.*).a/'}: mm{~'/\1/'} libua{sfml-window-meta}
         {{
-          dep_poptions = $cxx.lib_poptions(libua{sfml-window-meta}, obja)
-          depdb hash $dep_poptions
-          depdb dyndep "-I$out_root/src" "-I$src_root/src" \
-                       "-I$out_root/include" "-I$src_root/include" \
-                       --what=header --default-type=h \
-                       --update-exclude libua{sfml-window-meta} \
-                       -- $cxx.path $cc.poptions $cxx.poptions $dep_poptions \
-                          $cc.coptions $cxx.coptions $cxx.mode -M -MG $path($<[0])
-          diag obj-c++ ($<[0])
-          $cxx.path $cc.poptions $cxx.poptions $dep_poptions    \
-                    $cc.coptions $cxx.coptions $cxx.mode        \
-                    -o $path($>) -c -x objective-c++ $path($<[0])
+            dep_poptions = $cxx.lib_poptions(libua{sfml-window-meta}, obja)
+            depdb hash $dep_poptions
+            depdb dyndep "-I$out_root/src" "-I$src_root/src" \
+                         "-I$out_root/include" "-I$src_root/include" \
+                         --what=header --default-type=h \
+                         --update-exclude libua{sfml-window-meta} \
+                         -- $cxx.path $cc.poptions $cxx.poptions $dep_poptions \
+                            $cc.coptions $cxx.coptions $cxx.mode -M -MG $path($<[0])
+            diag obj-c++ ($<[0])
+            $cxx.path $cc.poptions $cxx.poptions $dep_poptions    \
+                      $cc.coptions $cxx.coptions $cxx.mode        \
+                      -o $path($>) -c -x objective-c++ $path($<[0])
         }}
         objs{~'/(.*).so/'}: mm{~'/\1/'} libus{sfml-window-meta}
         {{
-          dep_poptions = $cxx.lib_poptions(libus{sfml-window-meta}, objs)
-          depdb hash $dep_poptions
-          depdb dyndep "-I$out_root/src" "-I$src_root/src" \
-                       "-I$out_root/include" "-I$src_root/include" \
-                       --what=header --default-type=h \
-                       --update-exclude libus{sfml-window-meta} \
-                       -- $cxx.path $cc.poptions $cxx.poptions $dep_poptions \
-                          $cc.coptions $cxx.coptions $cxx.mode -M -MG $path($<[0])
-          diag obj-c++ ($<[0])
-          $cxx.path $cc.poptions $cxx.poptions $dep_poptions    \
-                    $cc.coptions $cxx.coptions $cxx.mode        \
-                    -o $path($>) -c -x objective-c++ $path($<[0])
+            dep_poptions = $cxx.lib_poptions(libus{sfml-window-meta}, objs)
+            depdb hash $dep_poptions
+            depdb dyndep "-I$out_root/src" "-I$src_root/src" \
+                         "-I$out_root/include" "-I$src_root/include" \
+                         --what=header --default-type=h \
+                         --update-exclude libus{sfml-window-meta} \
+                         -- $cxx.path $cc.poptions $cxx.poptions $dep_poptions \
+                            $cc.coptions $cxx.coptions $cxx.mode -M -MG $path($<[0])
+            diag obj-c++ ($<[0])
+            $cxx.path $cc.poptions $cxx.poptions $dep_poptions    \
+                      $cc.coptions $cxx.coptions $cxx.mode        \
+                      -o $path($>) -c -x objective-c++ $path($<[0])
         }}
 
         obja{~'/(.*).a/'}: m{~'/\1/'} libua{sfml-window-meta}
         {{
-          dep_poptions = $c.lib_poptions(libua{sfml-window-meta}, obja)
-          depdb hash $dep_poptions
-          depdb dyndep "-I$out_root/src" "-I$src_root/src" \
-                       "-I$out_root/include" "-I$src_root/include" \
-                       --what=header --default-type=h \
-                       --update-exclude libua{sfml-window-meta} \
-                       -- $c.path $cc.poptions $c.poptions $dep_poptions \
-                          $cc.coptions $c.coptions $c.mode -M -MG $path($<[0])
-          diag obj-c ($<[0])
-          $c.path $cc.poptions $c.poptions $dep_poptions    \
-                    $cc.coptions $c.coptions $c.mode        \
-                    -o $path($>) -c -x objective-c $path($<[0])
+            dep_poptions = $c.lib_poptions(libua{sfml-window-meta}, obja)
+            depdb hash $dep_poptions
+            depdb dyndep "-I$out_root/src" "-I$src_root/src" \
+                         "-I$out_root/include" "-I$src_root/include" \
+                         --what=header --default-type=h \
+                         --update-exclude libua{sfml-window-meta} \
+                         -- $c.path $cc.poptions $c.poptions $dep_poptions \
+                            $cc.coptions $c.coptions $c.mode -M -MG $path($<[0])
+            diag obj-c ($<[0])
+            $c.path $cc.poptions $c.poptions $dep_poptions    \
+                      $cc.coptions $c.coptions $c.mode        \
+                      -o $path($>) -c -x objective-c $path($<[0])
         }}
         objs{~'/(.*).so/'}: m{~'/\1/'} libus{sfml-window-meta}
         {{
-          dep_poptions = $c.lib_poptions(libus{sfml-window-meta}, objs)
-          depdb hash $dep_poptions
-          depdb dyndep "-I$out_root/src" "-I$src_root/src" \
-                       "-I$out_root/include" "-I$src_root/include" \
-                       --what=header --default-type=h \
-                       --update-exclude libus{sfml-window-meta} \
-                       -- $c.path $cc.poptions $c.poptions $dep_poptions \
-                          $cc.coptions $c.coptions $c.mode -M -MG $path($<[0])
-          diag obj-c ($<[0])
-          $c.path $cc.poptions $c.poptions $dep_poptions    \
-                    $cc.coptions $c.coptions $c.mode        \
-                    -o $path($>) -c -x objective-c $path($<[0])
+            dep_poptions = $c.lib_poptions(libus{sfml-window-meta}, objs)
+            depdb hash $dep_poptions
+            depdb dyndep "-I$out_root/src" "-I$src_root/src" \
+                         "-I$out_root/include" "-I$src_root/include" \
+                         --what=header --default-type=h \
+                         --update-exclude libus{sfml-window-meta} \
+                         -- $c.path $cc.poptions $c.poptions $dep_poptions \
+                            $cc.coptions $c.coptions $c.mode -M -MG $path($<[0])
+            diag obj-c ($<[0])
+            $c.path $cc.poptions $c.poptions $dep_poptions    \
+                      $cc.coptions $c.coptions $c.mode        \
+                      -o $path($>) -c -x objective-c $path($<[0])
         }}
 
         platform_libs += -framework Cocoa -framework Foundation -framework CoreFoundation -framework AppKit -framework IOKit -framework Carbon

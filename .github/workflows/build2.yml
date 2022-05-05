@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: sudo apt install -y libx11-dev libxrandr-dev libudev-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev
       - name: Configure
-        run: bdep init -C @${{ matrix.config.compiler_cc }} cc config.cxx=${{ matrix.config.compiler_cxx }}
+        run: bdep init -C @${{matrix.config.compiler_cc}} cc config.cxx=${{matrix.config.compiler_cxx}}
       - name: Build
         run: b
 
@@ -58,7 +58,7 @@ jobs:
       with:
         build2-version: staged
     - name: Configure
-      run: bdep init -C @${{ matrix.config.compiler_cc }} cc config.cxx=${{ matrix.config.compiler_cxx }}
+      run: bdep init -C @${{matrix.config.compiler_cc}} cc config.cxx=${{matrix.config.compiler_cxx}}
     - name: Build
       run: b
 
@@ -73,6 +73,10 @@ jobs:
               os: windows-latest
               compiler_cc: msvc
               compiler_cxx: msvc++
+            - name: Windows clang
+              os: windows-latest
+              compiler_cc: clang
+              compiler_cxx: clang++
     steps:
     - uses: actions/checkout@v3
       with:
@@ -80,7 +84,8 @@ jobs:
     - uses: build2/setup-build2-github-action@v2
       with:
         build2-version: staged
+        build2-windows-compiler: ${{matrix.config.compiler_cc}}
     - name: Configure
-      run: bdep init -C ../sfml-${{ matrix.config.compiler_cc }} @${{ matrix.config.compiler_cc }}
+      run: bdep init -C ../sfml-${{matrix.config.compiler_cc}} @${{matrix.config.compiler_cc}}
     - name: Build
       run: b

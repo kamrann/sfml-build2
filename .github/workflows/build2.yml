@@ -36,7 +36,7 @@ jobs:
       - name: Configure
         run: bdep init -C @${{matrix.config.compiler_cc}} cc config.cxx=${{matrix.config.compiler_cxx}}
       - name: Build
-        run: b
+        run: b -V
 
   # Job for building on MacOS
   MacOS:
@@ -60,7 +60,7 @@ jobs:
     - name: Configure
       run: bdep init -C @${{matrix.config.compiler_cc}} cc config.cxx=${{matrix.config.compiler_cxx}}
     - name: Build
-      run: b
+      run: b -V
 
   # Job for building on Windows
   Windows:
@@ -88,4 +88,4 @@ jobs:
     - name: Configure
       run: bdep init -C ../sfml-${{matrix.config.compiler_cc}} @${{matrix.config.compiler_cc}}
     - name: Build
-      run: b
+      run: b -V

@@ -73,7 +73,10 @@ switch $config.sfml_window.platform
         m{*}: extension = m
 
         objc_files = SFML/Window/OSX/*.m
+        objc_files = $regex.apply($objc_files,'(.+)\.m','\1')
+
         objcxx_files = SFML/Window/OSX/*.mm
+        objcxx_files = $regex.apply($objcxx_files,'(.+)\.mm','\1')
 
         [rule_hint=cxx] libul{sfml-window-meta}: $impl_libs $intf_libs
 

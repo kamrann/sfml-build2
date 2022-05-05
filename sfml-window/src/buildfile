@@ -41,7 +41,15 @@ switch $config.sfml_window.platform
     {
         lib{sfml-window}: SFML/Window/Win32/{hxx cxx}{*}
         platform_poptions += -DUNICODE -D_UNICODE
-        platform_libs += winmm.lib gdi32.lib opengl32.lib advapi32.lib
+
+        switch $cxx.target.system: path.match
+        {
+            case '*msvc*'
+                platform_libs += winmm.lib gdi32.lib opengl32.lib advapi32.lib
+            default
+                platform_libs += -lwinmm -lgdi32 -lopengl32 -ladvapi32
+          }
+
     }
     case 'linux'
     {

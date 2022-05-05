@@ -72,11 +72,12 @@ jobs:
             - name: Windows msvc
               os: windows-latest
               compiler_cc: msvc
-              compiler_cxx: msvc++
             - name: Windows clang
               os: windows-latest
               compiler_cc: clang
-              compiler_cxx: clang++
+            - name: Windows mingw
+              os: windows-latest
+              compiler_cc: mingw
     steps:
     - uses: actions/checkout@v3
       with:

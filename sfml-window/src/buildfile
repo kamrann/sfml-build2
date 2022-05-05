@@ -72,28 +72,11 @@ switch $config.sfml_window.platform
         define m: file
         m{*}: extension = m
 
-        objc_files = SFML/Window/OSX/SFApplicationDelegate \
-                     SFML/Window/OSX/SFApplication \
-                     SFML/Window/OSX/SFSilentResponder \
-                     SFML/Window/OSX/SFWindow
+        objc_files = SFML/Window/OSX/*.m
+        objc_files = $regex.apply($objc_files,'(.+)\.m','\1')
 
-        objcxx_files = SFML/Window/OSX/AutoreleasePoolWrapper \
-                       SFML/Window/OSX/ClipboardImpl \
-                       SFML/Window/OSX/CursorImpl \
-                       SFML/Window/OSX/InputImpl \
-                       SFML/Window/OSX/SFContext \
-                       SFML/Window/OSX/SFOpenGLView+keyboard \
-                       SFML/Window/OSX/SFOpenGLView+mouse \
-                       SFML/Window/OSX/SFWindowController \
-                       SFML/Window/OSX/cg_sf_conversion \
-                       SFML/Window/OSX/cpp_objc_conversion \
-                       SFML/Window/OSX/HIDInputManager \
-                       SFML/Window/OSX/NSImage+raw \
-                       SFML/Window/OSX/SFKeyboardModifiersHelper \
-                       SFML/Window/OSX/SFOpenGLView \
-                       SFML/Window/OSX/SFViewController \
-                       SFML/Window/OSX/WindowImplCocoa
-
+        objcxx_files = SFML/Window/OSX/*.mm
+        objcxx_files = $regex.apply($objcxx_files,'(.+)\.mm','\1')
 
         [rule_hint=cxx] libul{sfml-window-meta}: $impl_libs $intf_libs
 
@@ -177,7 +160,13 @@ switch $config.sfml_window.platform
                       -o $path($>) -c -x objective-c $path($<[0])
         }}
 
-        platform_libs += -framework Cocoa -framework Foundation -framework CoreFoundation -framework AppKit -framework IOKit -framework Carbon
+        platform_libs += -framework Cocoa \
+                         -framework Foundation \
+                         -framework CoreFoundation \
+                         -framework AppKit \
+                         -framework IOKit \
+                         -framework Carbon \
+                         -framework OpenGL
     }
     case 'ios'
     {

@@ -1,2 +1,6 @@
 include/SFML/Graphics symlink=dir
 src/SFML/Graphics symlink=dir
+examples/island symlink=dir
+examples/joystick symlink=dir
+examples/opengl symlink=dir
+examples/shader symlink=dir

@@ -1,2 +1,4 @@
 include/SFML/Network symlink=dir
 src/SFML/Network symlink=dir
+examples/ftp symlink=dir
+examples/sockets symlink=dir

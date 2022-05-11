@@ -1,0 +1,4 @@
+import libs += sfml-network%lib{sfml-network}
+
+exe{example-ftp}: ftp/cxx{*} $libs
+exe{example-sockets}: sockets/cxx{*} $libs

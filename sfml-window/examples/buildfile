@@ -1,0 +1,3 @@
+import libs += sfml-window%lib{sfml-window}
+
+exe{example-window}: window/cxx{*} $libs

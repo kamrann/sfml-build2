@@ -35,6 +35,7 @@ switch $config.sfml_window.platform
 platform_libs =
 platform_poptions =
 platform_coptions =
+unix_libs = -lX11 -lXrandr -lGL
 switch $config.sfml_window.platform
 {
     case 'windows'
@@ -57,17 +58,17 @@ switch $config.sfml_window.platform
         {
             platform_libs += -lEGL -lGLESv1_CM
         }
-        platform_libs += -lX11 -ludev
+        platform_libs += $unix_libs -ludev
     }
     case 'openbsd'
     {
         lib{sfml-window}: SFML/Window/OpenBSD/{hxx cxx}{*}
-        platform_libs += -lX11
+        platform_libs += -$unix_libs
     }
     case 'freebsd'
     {
         lib{sfml-window}: SFML/Window/FreeBSD/{hxx cxx}{*}
-        platform_libs += -lX11
+        platform_libs += $unix_libs
     }
     case 'macos'
     {
@@ -222,8 +223,9 @@ c.libs += $platform_libs
 # Export options.
 lib{sfml-window}:
 {
-  cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc" $platform_poptions
-  cxx.export.libs = $intf_libs $platform_libs
+    cxx.export.coptions = $platform_coptions
+    cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc" $platform_poptions
+    cxx.export.libs = $intf_libs $platform_libs
 }
 
 liba{sfml-window}: cxx.export.poptions += -DSFML_WINDOW_STATIC -DSFML_STATIC
@@ -233,9 +235,9 @@ libs{sfml-window}: cxx.export.poptions += -DSFML_WINDOW_SHARED
 # in place of another pre-release or the final version. See the version module
 # for details on the version.* variable values.
 if $version.pre_release
-  lib{sfml-window}: bin.lib.version = "-$version.project_id"
+    lib{sfml-window}: bin.lib.version = "-$version.project_id"
 else
-  lib{sfml-window}: bin.lib.version = "-$version.major.$version.minor"
+    lib{sfml-window}: bin.lib.version = "-$version.major.$version.minor"
 
 # Don't install private headers.
 {hxx ixx txx}{*}: install = false

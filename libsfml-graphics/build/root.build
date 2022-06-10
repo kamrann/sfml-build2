@@ -1,0 +1,21 @@
+cxx.std = latest
+
+using cxx
+
+hxx{*}: extension = hpp
+cxx{*}: extension = cpp
+
+# Assume headers are importable unless stated otherwise.
+#
+hxx{*}: cxx.importable = true
+
+# The test target for cross-testing (running tests under Wine, etc).
+test.target = $cxx.target
+
+source build/sfml_common.build
+config [string] config.libsfml_graphics.platform ?= $sfml_platform
+config [bool] config.libsfml_graphics.use_opengles ?= $sfml_use_opengles
+
+# definition needed for building SFML
+# but must be disabled for all importing libraries
+cxx.poptions += -DSFML_GRAPHICS_EXPORTS

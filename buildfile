@@ -1,2 +1,2 @@
-import pkgs = {sfml*/}
+import pkgs = {libsfml*/}
 ./: $pkgs

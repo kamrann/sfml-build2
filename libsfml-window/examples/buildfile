@@ -1,0 +1,4 @@
+import libs += libsfml-window%lib{sfml-window}
+
+./: exe{example-window}
+exe{example-window}: window/cxx{*} $libs

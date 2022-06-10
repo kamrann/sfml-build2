@@ -1,0 +1,67 @@
+import intf_libs = libsfml-window%lib{sfml-window}
+import intf_libs += libfreetype%lib{freetype}
+import intf_libs += stb_image%lib{stb_image}
+import intf_libs += stb_image_write%lib{stb_image_write}
+
+# Public headers.
+pub = [dir_path] ../include/
+
+include $pub
+
+pub_hdrs = $($pub/ pub_hdrs)
+
+lib{sfml-graphics}: $pub/{$pub_hdrs}
+lib{sfml-graphics}: SFML/Graphics/{hxx cxx}{* -GLLoader} $intf_libs
+
+platform_libs =
+if($config.libsfml_graphics.use_opengles)
+{
+    switch $config.libsfml_graphics.platform
+    {
+        case 'linux'
+        case 'android'
+            platform_libs += -lEGL -lGLESv1_CM
+        case 'ios'
+            platform_libs += -framework OpenGLES
+    }
+}
+else
+{
+    lib{sfml-graphics}: SFML/Graphics/{hxx cxx}{GLLoader}
+    if($config.libsfml_graphics.platform == 'linux')
+    {
+        platform_libs += -lX11
+    }
+}
+
+# Build options.
+out_pfx_inc = [dir_path] $out_root/include/
+src_pfx_inc = [dir_path] $src_root/include/
+out_pfx_src = [dir_path] $out_root/src/
+src_pfx_src = [dir_path] $src_root/src/
+
+cxx.poptions += "-I$out_pfx_src" "-I$src_pfx_src" \
+                "-I$out_pfx_inc" "-I$src_pfx_inc"
+cxx.libs += $platform_libs
+
+{hbmia obja}{*}: cxx.poptions += -DSFML_STATIC
+
+# Export options.
+lib{sfml-graphics}:
+{
+  cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc"
+  cxx.export.libs = $intf_libs $platform_libs
+}
+
+liba{sfml-graphics}: cxx.export.poptions += -DSFML_STATIC
+
+# For pre-releases use the complete version to make sure they cannot be used
+# in place of another pre-release or the final version. See the version module
+# for details on the version.* variable values.
+if $version.pre_release
+  lib{sfml-graphics}: bin.lib.version = "-$version.project_id"
+else
+  lib{sfml-graphics}: bin.lib.version = "-$version.major.$version.minor"
+
+# Don't install private headers.
+{hxx ixx txx}{*}: install = false

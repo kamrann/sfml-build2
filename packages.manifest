@@ -1,8 +1,8 @@
 : 1
-location: sfml-system/
+location: libsfml-system/
 :
-location: sfml-window/
+location: libsfml-window/
 :
-location: sfml-network/
+location: libsfml-network/
 :
-location: sfml-graphics/
+location: libsfml-graphics/

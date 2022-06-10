@@ -1,0 +1,236 @@
+import intf_libs = libsfml-system%lib{sfml-system}
+
+# Public headers.
+pub = [dir_path] ../include/
+
+include $pub
+pub_hdrs = $($pub/ pub_hdrs)
+
+lib{sfml-window}: $pub/{$pub_hdrs}
+lib{sfml-window}: SFML/Window/{hxx cxx}{* -EGLCheck -EglContext} $intf_libs
+
+if ($config.libsfml_window.use_opengles && $config.libsfml_window.platform != 'ios')
+{
+    lib{sfml-window}: SFML/Window/{hxx cxx}{EGLCheck EglContext}
+}
+
+switch $config.libsfml_window.platform
+{
+    case 'linux'
+    case 'openbsd'
+    case 'freebsd'
+    {
+        lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl -GlxContext -GlxExtensions}
+        if (!$config.libsfml_window.use_opengles)
+        {
+            lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{GlxContext GlxExtensions}
+        }
+    }
+}
+
+platform_libs = # Platform specific libraries.
+platform_poptions = # Platform specific poptions.
+platform_coptions = # Platform specific coptions.
+unix_libs = -lX11 -lXrandr -lGL
+switch $config.libsfml_window.platform
+{
+    case 'windows'
+    {
+        lib{sfml-window}: SFML/Window/Win32/{hxx cxx}{*}
+        platform_poptions += -DUNICODE -D_UNICODE
+
+        if ($cxx.target.system == 'mingw32')
+            platform_libs += -lwinmm -lgdi32 -lopengl32 -ladvapi32
+        else
+            platform_libs += winmm.lib gdi32.lib opengl32.lib advapi32.lib
+    }
+    case 'linux'
+    {
+        lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{JoystickImpl}
+        if ($config.libsfml_window.use_opengles)
+        {
+            platform_libs += -lEGL -lGLESv1_CM
+        }
+        platform_libs += $unix_libs -ludev
+    }
+    case 'openbsd'
+    {
+        lib{sfml-window}: SFML/Window/OpenBSD/{hxx cxx}{*}
+        platform_libs += -$unix_libs
+    }
+    case 'freebsd'
+    {
+        lib{sfml-window}: SFML/Window/FreeBSD/{hxx cxx}{*}
+        platform_libs += $unix_libs
+    }
+    case 'macos'
+    {
+        lib{sfml-window}: SFML/Window/OSX/{h hxx cxx}{*}
+
+        define mm: file
+        mm{*}: extension = mm
+
+        define m: file
+        m{*}: extension = m
+
+        objc_files = SFML/Window/OSX/*.m
+        objc_files = $regex.apply($objc_files,'(.+)\.m','\1')
+
+        objcxx_files = SFML/Window/OSX/*.mm
+        objcxx_files = $regex.apply($objcxx_files,'(.+)\.mm','\1')
+
+        [rule_hint=cxx] libul{sfml-window-meta}: $intf_libs
+
+        for n: $objc_files
+        {
+            obja{$(n).a.o}: m{$n}
+            objs{$(n).so.o}: m{$n}
+        }
+
+        for n: $objcxx_files
+        {
+            obja{$(n).a.o}: mm{$n}
+            objs{$(n).so.o}: mm{$n}
+        }
+
+        liba{sfml-window}: obja{$regex.apply($objc_files,'(.+)','\1.a.o')}
+        libs{sfml-window}: objs{$regex.apply($objc_files,'(.+)','\1.so.o')}
+
+        liba{sfml-window}: obja{$regex.apply($objcxx_files,'(.+)','\1.a.o')}
+        libs{sfml-window}: objs{$regex.apply($objcxx_files,'(.+)','\1.so.o')}
+
+        obja{~'/(.*).a/'}: mm{~'/\1/'} libua{sfml-window-meta}
+        {{
+            dep_poptions = $cxx.lib_poptions(libua{sfml-window-meta}, obja)
+            depdb hash $dep_poptions
+            depdb dyndep "-I$out_root/src" "-I$src_root/src" \
+                         "-I$out_root/include" "-I$src_root/include" \
+                         --what=header --default-type=h \
+                         --update-exclude libua{sfml-window-meta} \
+                         -- $cxx.path $cc.poptions $cxx.poptions $dep_poptions \
+                            $cc.coptions $cxx.coptions $cxx.mode -M -MG $path($<[0])
+            diag obj-c++ ($<[0])
+            $cxx.path $cc.poptions $cxx.poptions $dep_poptions    \
+                      $cc.coptions $cxx.coptions $cxx.mode        \
+                      -o $path($>) -c -x objective-c++ $path($<[0])
+        }}
+        objs{~'/(.*).so/'}: mm{~'/\1/'} libus{sfml-window-meta}
+        {{
+            dep_poptions = $cxx.lib_poptions(libus{sfml-window-meta}, objs)
+            depdb hash $dep_poptions
+            depdb dyndep "-I$out_root/src" "-I$src_root/src" \
+                         "-I$out_root/include" "-I$src_root/include" \
+                         --what=header --default-type=h \
+                         --update-exclude libus{sfml-window-meta} \
+                         -- $cxx.path $cc.poptions $cxx.poptions $dep_poptions \
+                            $cc.coptions $cxx.coptions $cxx.mode -M -MG $path($<[0])
+            diag obj-c++ ($<[0])
+            $cxx.path $cc.poptions $cxx.poptions $dep_poptions    \
+                      $cc.coptions $cxx.coptions $cxx.mode        \
+                      -o $path($>) -c -x objective-c++ $path($<[0])
+        }}
+
+        obja{~'/(.*).a/'}: m{~'/\1/'} libua{sfml-window-meta}
+        {{
+            dep_poptions = $c.lib_poptions(libua{sfml-window-meta}, obja)
+            depdb hash $dep_poptions
+            depdb dyndep "-I$out_root/src" "-I$src_root/src" \
+                         "-I$out_root/include" "-I$src_root/include" \
+                         --what=header --default-type=h \
+                         --update-exclude libua{sfml-window-meta} \
+                         -- $c.path $cc.poptions $c.poptions $dep_poptions \
+                            $cc.coptions $c.coptions $c.mode -M -MG $path($<[0])
+            diag obj-c ($<[0])
+            $c.path $cc.poptions $c.poptions $dep_poptions    \
+                      $cc.coptions $c.coptions $c.mode        \
+                      -o $path($>) -c -x objective-c $path($<[0])
+        }}
+        objs{~'/(.*).so/'}: m{~'/\1/'} libus{sfml-window-meta}
+        {{
+            dep_poptions = $c.lib_poptions(libus{sfml-window-meta}, objs)
+            depdb hash $dep_poptions
+            depdb dyndep "-I$out_root/src" "-I$src_root/src" \
+                         "-I$out_root/include" "-I$src_root/include" \
+                         --what=header --default-type=h \
+                         --update-exclude libus{sfml-window-meta} \
+                         -- $c.path $cc.poptions $c.poptions $dep_poptions \
+                            $cc.coptions $c.coptions $c.mode -M -MG $path($<[0])
+            diag obj-c ($<[0])
+            $c.path $cc.poptions $c.poptions $dep_poptions    \
+                      $cc.coptions $c.coptions $c.mode        \
+                      -o $path($>) -c -x objective-c $path($<[0])
+        }}
+
+        platform_libs += -framework Cocoa \
+                         -framework Foundation \
+                         -framework CoreFoundation \
+                         -framework AppKit \
+                         -framework IOKit \
+                         -framework Carbon \
+                         -framework OpenGL
+    }
+    case 'ios'
+    {
+        lib{sfml-window}: SFML/Window/iOS/{hxx cxx}{*}
+        if($config.libsfml_window.use_opengles)
+        {
+            platform_libs += -framework OpenGLES
+        }
+        platform_libs += -framework Foundation -framework UIKit -framework CoreGraphics -framework QuartzCore -framework CoreMotion
+    }
+    case 'android'
+    {
+        lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl -GlxContext}
+        lib{sfml-window}: SFML/Window/Android/{hxx cxx}{*}
+        if($config.libsfml_window.use_opengles)
+        {
+            platform_libs += -lEGL -lGLESv1_CM
+        }
+        platform_libs += -landroid
+    }
+    default
+    {
+        fail 'Invalid SFML platform'
+    }
+}
+
+# Build options.
+out_pfx_inc = [dir_path] $out_root/include/
+src_pfx_inc = [dir_path] $src_root/include/
+out_pfx_src = [dir_path] $out_root/src/
+src_pfx_src = [dir_path] $src_root/src/
+
+cxx.poptions += "-I$out_pfx_src" "-I$src_pfx_src" \
+                "-I$out_pfx_inc" "-I$src_pfx_inc" \
+                $platform_poptions
+cxx.coptions += $platform_coptions
+cxx.libs += $platform_libs
+
+c.poptions += "-I$out_pfx_src" "-I$src_pfx_src" \
+              "-I$out_pfx_inc" "-I$src_pfx_inc" \
+              $platform_poptions
+c.coptions += $platform_coptions
+c.libs += $platform_libs
+
+{hbmia obja}{*}: cxx.poptions += -DSFML_STATIC
+
+# Export options.
+lib{sfml-window}:
+{
+    cxx.export.coptions = $platform_coptions
+    cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc" $platform_poptions
+    cxx.export.libs = $intf_libs $platform_libs
+}
+
+liba{sfml-window}: cxx.export.poptions += -DSFML_STATIC
+
+# For pre-releases use the complete version to make sure they cannot be used
+# in place of another pre-release or the final version. See the version module
+# for details on the version.* variable values.
+if $version.pre_release
+    lib{sfml-window}: bin.lib.version = "-$version.project_id"
+else
+    lib{sfml-window}: bin.lib.version = "-$version.major.$version.minor"
+
+# Don't install private headers.
+{hxx ixx txx}{*}: install = false

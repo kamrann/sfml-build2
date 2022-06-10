@@ -1,7 +1,0 @@
-project = sfml-network
-
-using version
-using config
-using test
-using install
-using dist

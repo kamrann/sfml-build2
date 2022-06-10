@@ -1,6 +1,0 @@
-import libs += sfml-network%lib{sfml-network}
-
-./ : exe{example-ftp} exe{example-sockets}
-
-exe{example-ftp}: ftp/cxx{*} $libs
-exe{example-sockets}: sockets/cxx{*} $libs

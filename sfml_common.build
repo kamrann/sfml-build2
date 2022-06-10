@@ -3,7 +3,7 @@
 #
 # linux, macos, windows, freebsd, openbsd
 # netbsd, android, ios
-sfml_platform = $config.sfml.platform
+sfml_platform = $config.libsfml.platform
 sfml_use_opengles = false
 
 # detect platform if not specified

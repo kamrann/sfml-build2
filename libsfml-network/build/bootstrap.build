@@ -1,0 +1,7 @@
+project = libsfml-network
+
+using version
+using config
+using test
+using install
+using dist

@@ -1,19 +1,15 @@
 import intf_libs = sfml-system%lib{sfml-system}
-impl_libs = # Implementation dependencies.
 
 # Public headers.
 pub = [dir_path] ../include/
 
 include $pub
-
 pub_hdrs = $($pub/ pub_hdrs)
 
 lib{sfml-window}: $pub/{$pub_hdrs}
+lib{sfml-window}: SFML/Window/{hxx cxx}{* -EGLCheck -EglContext} $intf_libs
 
-# Private headers and sources as well as dependencies.
-lib{sfml-window}: SFML/Window/{hxx cxx}{* -EGLCheck -EglContext} $impl_libs $intf_libs
-
-if($config.sfml_window.use_opengles && $config.sfml_window.platform != 'ios')
+if ($config.sfml_window.use_opengles && $config.sfml_window.platform != 'ios')
 {
     lib{sfml-window}: SFML/Window/{hxx cxx}{EGLCheck EglContext}
 }
@@ -25,16 +21,16 @@ switch $config.sfml_window.platform
     case 'freebsd'
     {
         lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl -GlxContext -GlxExtensions}
-        if(!$config.sfml_window.use_opengles)
+        if (!$config.sfml_window.use_opengles)
         {
             lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{GlxContext GlxExtensions}
         }
     }
 }
 
-platform_libs =
-platform_poptions =
-platform_coptions =
+platform_libs = # Platform specific libraries.
+platform_poptions = # Platform specific poptions.
+platform_coptions = # Platform specific coptions.
 unix_libs = -lX11 -lXrandr -lGL
 switch $config.sfml_window.platform
 {
@@ -43,18 +39,15 @@ switch $config.sfml_window.platform
         lib{sfml-window}: SFML/Window/Win32/{hxx cxx}{*}
         platform_poptions += -DUNICODE -D_UNICODE
 
-        switch $cxx.id
-        {
-            case 'gcc'
-                platform_libs += -lwinmm -lgdi32 -lopengl32 -ladvapi32
-            default
-                platform_libs += winmm.lib gdi32.lib opengl32.lib advapi32.lib
-        }
+        if ($cxx.target.system == 'mingw32')
+            platform_libs += -lwinmm -lgdi32 -lopengl32 -ladvapi32
+        else
+            platform_libs += winmm.lib gdi32.lib opengl32.lib advapi32.lib
     }
     case 'linux'
     {
         lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{JoystickImpl}
-        if($config.sfml_window.use_opengles)
+        if ($config.sfml_window.use_opengles)
         {
             platform_libs += -lEGL -lGLESv1_CM
         }
@@ -80,13 +73,10 @@ switch $config.sfml_window.platform
         define m: file
         m{*}: extension = m
 
-        objc_files = SFML/Window/OSX/*.m
-        objc_files = $regex.apply($objc_files,'(.+)\.m','\1')
+        objc_files = SFML/Window/OSX/$name({*.m})
+        objcxx_files = SFML/Window/OSX/$name({*.mm})
 
-        objcxx_files = SFML/Window/OSX/*.mm
-        objcxx_files = $regex.apply($objcxx_files,'(.+)\.mm','\1')
-
-        [rule_hint=cxx] libul{sfml-window-meta}: $impl_libs $intf_libs
+        [rule_hint=cxx] libul{sfml-window-meta}: $intf_libs
 
         for n: $objc_files
         {
@@ -196,7 +186,9 @@ switch $config.sfml_window.platform
         platform_libs += -landroid
     }
     default
+    {
         fail 'Invalid SFML platform'
+    }
 }
 
 # Build options.
@@ -205,20 +197,19 @@ src_pfx_inc = [dir_path] $src_root/include/
 out_pfx_src = [dir_path] $out_root/src/
 src_pfx_src = [dir_path] $src_root/src/
 
-cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
+cxx.poptions += "-I$out_pfx_src" "-I$src_pfx_src" \
                 "-I$out_pfx_inc" "-I$src_pfx_inc" \
                 $platform_poptions
 cxx.coptions += $platform_coptions
 cxx.libs += $platform_libs
 
-c.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
+c.poptions += "-I$out_pfx_src" "-I$src_pfx_src" \
               "-I$out_pfx_inc" "-I$src_pfx_inc" \
               $platform_poptions
 c.coptions += $platform_coptions
 c.libs += $platform_libs
 
-{hbmia obja}{*}: cxx.poptions += -DSFML_WINDOW_STATIC_BUILD -DSFML_STATIC
-{hbmis objs}{*}: cxx.poptions += -DSFML_WINDOW_SHARED_BUILD
+{hbmia obja}{*}: cxx.poptions += -DSFML_STATIC
 
 # Export options.
 lib{sfml-window}:
@@ -228,8 +219,7 @@ lib{sfml-window}:
     cxx.export.libs = $intf_libs $platform_libs
 }
 
-liba{sfml-window}: cxx.export.poptions += -DSFML_WINDOW_STATIC -DSFML_STATIC
-libs{sfml-window}: cxx.export.poptions += -DSFML_WINDOW_SHARED
+liba{sfml-window}: cxx.export.poptions += -DSFML_STATIC
 
 # For pre-releases use the complete version to make sure they cannot be used
 # in place of another pre-release or the final version. See the version module

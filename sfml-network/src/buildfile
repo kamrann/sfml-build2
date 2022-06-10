@@ -1,5 +1,4 @@
 import intf_libs = sfml-system%lib{sfml-system}
-impl_libs = # Implementation dependencies.
 
 # Public headers.
 pub = [dir_path] ../include/
@@ -9,9 +8,7 @@ include $pub
 pub_hdrs = $($pub/ pub_hdrs)
 
 lib{sfml-network}: $pub/{$pub_hdrs}
-
-# Private headers and sources as well as dependencies.
-lib{sfml-network}: SFML/Network/{hxx cxx}{*} $impl_libs $intf_libs
+lib{sfml-network}: SFML/Network/{hxx cxx}{*} $intf_libs
 
 platform_libs =
 switch $config.sfml_network.platform
@@ -19,7 +16,10 @@ switch $config.sfml_network.platform
     case 'windows'
     {
         lib{sfml-network}: SFML/Network/Win32/{hxx cxx}{*}
-        platform_libs += ws2_32.lib
+        if ($cxx.target.system == 'mingw32')
+            platform_libs += -lws2_32
+        else
+            platform_libs += ws2_32.lib
     }
     case 'linux'
     case 'openbsd'
@@ -38,12 +38,11 @@ src_pfx_inc = [dir_path] $src_root/include/
 out_pfx_src = [dir_path] $out_root/src/
 src_pfx_src = [dir_path] $src_root/src/
 
-cxx.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
+cxx.poptions += "-I$out_pfx_src" "-I$src_pfx_src" \
                 "-I$out_pfx_inc" "-I$src_pfx_inc"
 cxx.libs += $platform_libs
 
-{hbmia obja}{*}: cxx.poptions += -DSFML_WINDOW_STATIC_BUILD -DSFML_STATIC
-{hbmis objs}{*}: cxx.poptions += -DSFML_WINDOW_SHARED_BUILD
+{hbmia obja}{*}: cxx.poptions += -DSFML_STATIC
 
 # Export options.
 lib{sfml-network}:
@@ -52,8 +51,7 @@ lib{sfml-network}:
   cxx.export.libs = $intf_libs $platform_libs
 }
 
-liba{sfml-network}: cxx.export.poptions += -DSFML_WINDOW_STATIC -DSFML_STATIC
-libs{sfml-network}: cxx.export.poptions += -DSFML_WINDOW_SHARED
+liba{sfml-network}: cxx.export.poptions += -DSFML_STATIC
 
 # For pre-releases use the complete version to make sure they cannot be used
 # in place of another pre-release or the final version. See the version module

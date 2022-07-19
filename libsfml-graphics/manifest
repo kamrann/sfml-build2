@@ -11,8 +11,8 @@ doc-url: https://www.sfml-dev.org/documentation/2.5.1/group__graphics.php
 package-url: https://github.com/build2-packaging/sfml
 package-email: rookfighter@posteo.org
 builds: default
-depends: * build2 >= 0.14.0
-depends: * bpkg >= 0.14.0
+depends: * build2 >= 0.15.0-
+depends: * bpkg >= 0.15.0-
 depends: libsfml-window == $
 depends: libfreetype ^2.11.0
 depends: stb_image ^2.26.0

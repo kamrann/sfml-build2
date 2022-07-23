@@ -1,0 +1,24 @@
+# supported values are currently:
+#
+# linux, macos, windows, freebsd, openbsd
+# netbsd, android, ios
+sfml_platform =
+
+# detect SFML platform based on the target class
+switch $cxx.target.class
+{
+    case 'windows'
+        sfml_platform = 'windows'
+    case 'linux'
+        sfml_platform = 'linux'
+    case 'macos'
+        sfml_platform = 'macos'
+    case 'bsd'
+        sfml_platform = 'freebsd'
+}
+
+switch $cxx.id
+{
+    case 'msvc'
+        cxx.poptions += -D_CRT_SECURE_NO_DEPRECATE -D_SCL_SECURE_NO_WARNINGS
+}

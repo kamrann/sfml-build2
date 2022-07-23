@@ -12,10 +12,16 @@ hxx{*}: cxx.importable = true
 # The test target for cross-testing (running tests under Wine, etc).
 test.target = $cxx.target
 
-source build/sfml_common.build
+# auto detect SFML platform and store in sfml_platform
+source build/sfml_platform_config.build
+
 config [string] config.libsfml_graphics.platform ?= $sfml_platform
-config [bool] config.libsfml_graphics.use_opengles ?= $sfml_use_opengles
+config [bool] config.libsfml_graphics.use_opengles ?= false
 
 # definition needed for building SFML
 # but must be disabled for all importing libraries
 cxx.poptions += -DSFML_GRAPHICS_EXPORTS
+
+# set sfml_platform to configured value and do validation check
+sfml_platform = $config.libsfml_graphics.platform
+source build/sfml_platform_check.build

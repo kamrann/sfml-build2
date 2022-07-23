@@ -1,0 +1,18 @@
+# check if the sfml platform has a valid value
+switch $sfml_platform
+{
+    case 'windows'
+    case 'linux'
+    case 'macos'
+    case 'freebsd'
+    case 'openbsd'
+    case 'android'
+    case 'ios'
+    {
+        # do nothing, these are all valid
+    }
+    default
+        fail 'Invalid SFML platform $sfml_platform'
+
+}
+

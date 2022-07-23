@@ -11,6 +11,10 @@ doc-url: https://www.sfml-dev.org/documentation/2.5.1/group__window.php
 package-url: https://github.com/build2-packaging/sfml
 package-email: rookfighter@posteo.org
 builds: default
+
+build-file: sfml_platform_check.build
+build-file: sfml_platform_config.build
+
 depends: * build2 >= 0.15.0-
 depends: * bpkg >= 0.15.0-
 depends: libsfml-system == $

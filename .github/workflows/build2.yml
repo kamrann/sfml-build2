@@ -17,14 +17,18 @@ jobs:
     strategy:
       matrix:
         config:
-          - name: Ubuntu gcc
+          - name: Ubuntu gcc Debug
             os: ubuntu-latest
-            compiler_cc: gcc
-            compiler_cxx: g++
-          - name: Ubuntu clang
+            config_file: gcc.debug.build
+          - name: Ubuntu clang Debug
             os: ubuntu-latest
-            compiler_cc: clang
-            compiler_cxx: clang++
+            config_file: clang.debug.build
+          - name: Ubuntu gcc Release
+            os: ubuntu-latest
+            config_file: gcc.release.build
+          - name: Ubuntu clang Release
+            os: ubuntu-latest
+            config_file: clang.release.build
 
     steps:
       - uses: actions/checkout@v3
@@ -36,7 +40,7 @@ jobs:
       - name: Install dependencies
         run: sudo apt update && sudo apt install -y libx11-dev libxrandr-dev libudev-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev
       - name: Configure
-        run: bdep init -C @${{matrix.config.compiler_cc}} cc config.cxx=${{matrix.config.compiler_cxx}}
+        run: bdep init -C @cc cc config.config.load=build-config/${{matrix.config.config_file}}
       - name: Build
         run: b -V
 
@@ -47,10 +51,12 @@ jobs:
     strategy:
       matrix:
         config:
-          - name: MacOS clang
+          - name: MacOS clang Debug
             os: macos-latest
-            compiler_cc: clang
-            compiler_cxx: clang++
+            config_file: clang.debug.build
+          - name: MacOS clang Release
+            os: macos-latest
+            config_file: clang.release.build
 
     steps:
     - uses: actions/checkout@v3
@@ -60,7 +66,7 @@ jobs:
       with:
         build2-version: staged
     - name: Configure
-      run: bdep init -C @${{matrix.config.compiler_cc}} cc config.cxx=${{matrix.config.compiler_cxx}}
+      run: bdep init -C @cc cc config.config.load=build-config/${{matrix.config.config_file}}
     - name: Build
       run: b -V
 
@@ -71,12 +77,22 @@ jobs:
     strategy:
       matrix:
         config:
-            - name: Windows msvc
-              os: windows-latest
-              compiler_cc: msvc
-            - name: Windows clang
-              os: windows-latest
-              compiler_cc: clang
+          - name: Windows msvc Debug
+            os: windows-latest
+            config_file: msvc.debug.build
+            compiler_type: msvc
+          - name: Windows clang Debug
+            os: windows-latest
+            config_file: clang.debug.build
+            compiler_type: clang
+          - name: Windows msvc Release
+            os: windows-latest
+            config_file: msvc.release.build
+            compiler_type: msvc
+          - name: Windows clang Release
+            os: windows-latest
+            config_file: clang.release.build
+            compiler_type: clang
     steps:
     - uses: actions/checkout@v3
       with:
@@ -84,8 +100,8 @@ jobs:
     - uses: build2/setup-build2-github-action@v2
       with:
         build2-version: staged
-        build2-windows-compiler: ${{matrix.config.compiler_cc}}
+        build2-windows-compiler:  ${{matrix.config.compiler_type}}
     - name: Configure
-      run: bdep init -C ../sfml-${{matrix.config.compiler_cc}} @${{matrix.config.compiler_cc}}
+      run: bdep init -C ../sfml-cc @cc cc config.config.load=build-config/${{matrix.config.config_file}}
     - name: Build
       run: b -V

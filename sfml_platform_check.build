@@ -12,7 +12,7 @@ switch $sfml_platform
         # do nothing, these are all valid
     }
     default
-        fail 'Invalid SFML platform $sfml_platform'
+        fail "Invalid SFML platform '$sfml_platform'"
 
 }
 

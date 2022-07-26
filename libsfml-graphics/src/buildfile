@@ -12,6 +12,7 @@ pub_hdrs = $($pub/ pub_hdrs)
 
 lib{sfml-graphics}: $pub/{$pub_hdrs}
 lib{sfml-graphics}: SFML/Graphics/{hxx cxx}{* -GLLoader} $intf_libs
+lib{sfml-graphics}: SFML/Graphics/{hxx cxx}{GLLoader}: include = (!$config.libsfml_graphics.use_opengles)
 
 platform_libs =
 if($config.libsfml_graphics.use_opengles)
@@ -27,12 +28,12 @@ if($config.libsfml_graphics.use_opengles)
 }
 else
 {
-    lib{sfml-graphics}: SFML/Graphics/{hxx cxx}{GLLoader}
     if($config.libsfml_graphics.platform == 'linux')
     {
         platform_libs += -lX11
     }
 }
+
 
 # Build options.
 out_pfx_inc = [dir_path] $out_root/include/

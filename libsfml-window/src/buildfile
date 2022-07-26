@@ -6,27 +6,29 @@ pub = [dir_path] ../include/
 include $pub
 pub_hdrs = $($pub/ pub_hdrs)
 
+is_ios = ($config.libsfml_window.platform == 'ios')
+is_android = ($config.libsfml_window.platform == 'android')
+is_windows = ($config.libsfml_window.platform == 'windows')
+is_linux = ($config.libsfml_window.platform == 'linux')
+is_openbsd = ($config.libsfml_window.platform == 'freebsd')
+is_freebsd = ($config.libsfml_window.platform == 'openbsd')
+is_macos = ($config.libsfml_window.platform == 'macos')
+is_linux_or_bsd = ($is_linux || $is_freebsd || $is_openbsd)
+
 lib{sfml-window}: $pub/{$pub_hdrs}
 lib{sfml-window}: SFML/Window/{hxx cxx}{* -EGLCheck -EglContext} $intf_libs
+lib{sfml-window}: SFML/Window/{hxx cxx}{EGLCheck EglContext}: include = (!$is_ios && $config.libsfml_window.use_opengles)
+lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl -GlxContext -GlxExtensions}: include = $is_linux_or_bsd
+lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{GlxContext GlxExtensions} : include = ($is_linux_or_bsd && !$config.libsfml_window.use_opengles)
+lib{sfml-window}: SFML/Window/Win32/{hxx cxx}{*}: include = $is_windows
+lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{JoystickImpl}: include = $is_linux
+lib{sfml-window}: SFML/Window/OpenBSD/{hxx cxx}{*}: include = $is_openbsd
+lib{sfml-window}: SFML/Window/FreeBSD/{hxx cxx}{*}: include = $is_freebsd
+lib{sfml-window}: SFML/Window/OSX/{h hxx cxx}{*}: include = $is_macos
+lib{sfml-window}: SFML/Window/iOS/{hxx cxx}{*}: include = $is_ios
+lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl -GlxContext}: include = $is_android
+lib{sfml-window}: SFML/Window/Android/{hxx cxx}{*}: include = $is_android
 
-if ($config.libsfml_window.use_opengles && $config.libsfml_window.platform != 'ios')
-{
-    lib{sfml-window}: SFML/Window/{hxx cxx}{EGLCheck EglContext}
-}
-
-switch $config.libsfml_window.platform
-{
-    case 'linux'
-    case 'openbsd'
-    case 'freebsd'
-    {
-        lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl -GlxContext -GlxExtensions}
-        if (!$config.libsfml_window.use_opengles)
-        {
-            lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{GlxContext GlxExtensions}
-        }
-    }
-}
 
 platform_libs = # Platform specific libraries.
 platform_poptions = # Platform specific poptions.
@@ -36,7 +38,6 @@ switch $config.libsfml_window.platform
 {
     case 'windows'
     {
-        lib{sfml-window}: SFML/Window/Win32/{hxx cxx}{*}
         platform_poptions += -DUNICODE -D_UNICODE
 
         if ($cxx.target.system == 'mingw32')
@@ -46,7 +47,6 @@ switch $config.libsfml_window.platform
     }
     case 'linux'
     {
-        lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{JoystickImpl}
         if ($config.libsfml_window.use_opengles)
         {
             platform_libs += -lEGL -lGLESv1_CM
@@ -55,17 +55,14 @@ switch $config.libsfml_window.platform
     }
     case 'openbsd'
     {
-        lib{sfml-window}: SFML/Window/OpenBSD/{hxx cxx}{*}
         platform_libs += -$unix_libs
     }
     case 'freebsd'
     {
-        lib{sfml-window}: SFML/Window/FreeBSD/{hxx cxx}{*}
         platform_libs += $unix_libs
     }
     case 'macos'
     {
-        lib{sfml-window}: SFML/Window/OSX/{h hxx cxx}{*}
 
         define mm: file
         mm{*}: extension = mm
@@ -171,7 +168,6 @@ switch $config.libsfml_window.platform
     }
     case 'ios'
     {
-        lib{sfml-window}: SFML/Window/iOS/{hxx cxx}{*}
         if($config.libsfml_window.use_opengles)
         {
             platform_libs += -framework OpenGLES
@@ -180,8 +176,6 @@ switch $config.libsfml_window.platform
     }
     case 'android'
     {
-        lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl -GlxContext}
-        lib{sfml-window}: SFML/Window/Android/{hxx cxx}{*}
         if($config.libsfml_window.use_opengles)
         {
             platform_libs += -lEGL -lGLESv1_CM

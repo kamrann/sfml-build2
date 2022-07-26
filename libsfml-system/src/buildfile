@@ -5,8 +5,20 @@ include $pub
 
 pub_hdrs = $($pub/ pub_hdrs)
 
+is_windows = ($config.libsfml_system.platform == 'windows')
+is_android = ($config.libsfml_system.platform == 'android')
+is_unix = ($config.libsfml_system.platform == 'linux' || \
+          $config.libsfml_system.platform == 'macos' || \
+          $config.libsfml_system.platform == 'freebsd' || \
+          $config.libsfml_system.platform == 'openbsd' || \
+          $config.libsfml_system.platform == 'android' || \
+          $config.libsfml_system.platform == 'ios')
+
 lib{sfml-system}: $pub/{$pub_hdrs}
 lib{sfml-system}: SFML/System/{hxx cxx}{*}
+lib{sfml-system}: SFML/System/Win32/{hxx cxx}{*}: include = $is_windows
+lib{sfml-system}: SFML/System/Unix/{hxx cxx}{*}: include = $is_unix
+lib{sfml-system}: SFML/System/Android/{hxx cxx}{*}: include = $is_android
 
 platform_libs = # Platform specific libraries.
 platform_poptions = # Platform specific poptions.
@@ -14,7 +26,6 @@ switch $config.libsfml_system.platform
 {
     case 'windows'
     {
-        lib{sfml-system}: SFML/System/Win32/{hxx cxx}{*}
         if ($cxx.target.system == 'mingw32')
             platform_libs += -lwinmm
         else
@@ -22,27 +33,17 @@ switch $config.libsfml_system.platform
     }
     case 'linux'
     {
-        lib{sfml-system}: SFML/System/Unix/{hxx cxx}{*}
         platform_libs = -lpthread -lrt
     }
     case 'macos'
     case 'openbsd'
     {
-        lib{sfml-system}: SFML/System/Unix/{hxx cxx}{*}
         platform_libs = -lpthread
     }
-    case 'ios'
-    case 'freebsd'
-    case 'netbsd'
-        lib{sfml-system}: SFML/System/Unix/{hxx cxx}{*}
     case 'android'
     {
-        lib{sfml-system}: SFML/System/Unix/{hxx cxx}{*}
-        lib{sfml-system}: SFML/System/Android/{hxx cxx}{*}
         platform_libs = -landroid -llog
     }
-    default
-        fail 'Invalid SFML platform'
 }
 
 # Build options.

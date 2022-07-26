@@ -7,29 +7,26 @@ include $pub
 
 pub_hdrs = $($pub/ pub_hdrs)
 
+is_windows = ($config.libsfml_system.platform == 'windows')
+is_unix = ($config.libsfml_system.platform == 'linux' || \
+          $config.libsfml_system.platform == 'macos' || \
+          $config.libsfml_system.platform == 'freebsd' || \
+          $config.libsfml_system.platform == 'openbsd' || \
+          $config.libsfml_system.platform == 'android' || \
+          $config.libsfml_system.platform == 'ios')
+
 lib{sfml-network}: $pub/{$pub_hdrs}
 lib{sfml-network}: SFML/Network/{hxx cxx}{*} $intf_libs
+lib{sfml-network}: SFML/Network/Win32/{hxx cxx}{*}: include = $is_windows
+lib{sfml-network}: SFML/Network/Unix/{hxx cxx}{*}: include = $is_unix
 
 platform_libs =
-switch $config.libsfml_network.platform
+if ($config.libsfml_network.platform == 'windows')
 {
-    case 'windows'
-    {
-        lib{sfml-network}: SFML/Network/Win32/{hxx cxx}{*}
-        if ($cxx.target.system == 'mingw32')
-            platform_libs += -lws2_32
-        else
-            platform_libs += ws2_32.lib
-    }
-    case 'linux'
-    case 'openbsd'
-    case 'freebsd'
-    case 'macos'
-    case 'ios'
-    case 'android'
-        lib{sfml-network}: SFML/Network/Unix/{hxx cxx}{*}
-    default
-        fail 'Invalid SFML platform'
+    if ($cxx.target.system == 'mingw32')
+        platform_libs += -lws2_32
+    else
+        platform_libs += ws2_32.lib
 }
 
 # Build options.

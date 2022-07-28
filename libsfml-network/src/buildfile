@@ -7,13 +7,13 @@ include $pub
 
 pub_hdrs = $($pub/ pub_hdrs)
 
-is_windows = ($config.libsfml_system.platform == 'windows')
-is_unix = ($config.libsfml_system.platform == 'linux' || \
-          $config.libsfml_system.platform == 'macos' || \
-          $config.libsfml_system.platform == 'freebsd' || \
-          $config.libsfml_system.platform == 'openbsd' || \
-          $config.libsfml_system.platform == 'android' || \
-          $config.libsfml_system.platform == 'ios')
+is_windows = ($config.libsfml_network.platform == 'windows')
+is_unix = ($config.libsfml_network.platform == 'linux' || \
+          $config.libsfml_network.platform == 'macos' || \
+          $config.libsfml_network.platform == 'freebsd' || \
+          $config.libsfml_network.platform == 'openbsd' || \
+          $config.libsfml_network.platform == 'android' || \
+          $config.libsfml_network.platform == 'ios')
 
 lib{sfml-network}: $pub/{$pub_hdrs}
 lib{sfml-network}: SFML/Network/{hxx cxx}{*} $intf_libs

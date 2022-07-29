@@ -48,14 +48,14 @@ objcxx_files = $regex.apply($objcxx_files,'(.+)\.mm','\1')
 
 for n: $objc_files
 {
-    obja{$(n).a.o}: m{$n}: include = $is_macos
-    objs{$(n).so.o}: m{$n}: include = $is_macos
+    obja{$(n).a.o}: m{$n}
+    objs{$(n).so.o}: m{$n}
 }
 
 for n: $objcxx_files
 {
-    obja{$(n).a.o}: mm{$n}: include = $is_macos
-    objs{$(n).so.o}: mm{$n}: include = $is_macos
+    obja{$(n).a.o}: mm{$n}
+    objs{$(n).so.o}: mm{$n}
 }
 
 liba{sfml-window}: obja{$regex.apply($objc_files,'(.+)','\1.a.o')}: include = $is_macos

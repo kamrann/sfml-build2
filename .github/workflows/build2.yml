@@ -36,7 +36,7 @@ jobs:
           submodules: true
       - uses: build2/setup-build2-github-action@v2
         with:
-          build2-version: staged
+          build2-version: latest
       - name: Install dependencies
         run: sudo apt update && sudo apt install -y libx11-dev libxrandr-dev libudev-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev
       - name: Configure
@@ -64,7 +64,7 @@ jobs:
         submodules: true
     - uses: build2/setup-build2-github-action@v2
       with:
-        build2-version: staged
+        build2-version: latest
     - name: Configure
       run: bdep init -C @cc cc config.config.load=build-config/${{matrix.config.config_file}}
     - name: Build
@@ -99,7 +99,7 @@ jobs:
         submodules: true
     - uses: build2/setup-build2-github-action@v2
       with:
-        build2-version: staged
+        build2-version: latest
         build2-windows-compiler:  ${{matrix.config.compiler_type}}
     - name: Configure
       run: bdep init -C ../sfml-cc @cc cc config.config.load=build-config/${{matrix.config.config_file}}

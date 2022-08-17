@@ -20,9 +20,10 @@ is_unix = ($config.libsfml_network.platform == 'linux' || \
           $config.libsfml_network.platform == 'ios')
 
 lib{sfml-network}: $pub/{$pub_hdrs}
-lib{sfml-network}: SFML/Network/{hxx cxx}{*} $intf_libs
+lib{sfml-network}: SFML/Network/{hxx cxx}{*}
 lib{sfml-network}: SFML/Network/Win32/{hxx cxx}{*}: include = $is_windows
 lib{sfml-network}: SFML/Network/Unix/{hxx cxx}{*}: include = $is_unix
+lib{sfml-network}: $intf_libs
 
 platform_libs =
 if ($config.libsfml_network.platform == 'windows')

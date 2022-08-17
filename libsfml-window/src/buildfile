@@ -20,7 +20,7 @@ is_macos = ($config.libsfml_window.platform == 'macos')
 is_linux_or_bsd = ($is_linux || $is_freebsd || $is_openbsd)
 
 lib{sfml-window}: $pub/{$pub_hdrs}
-lib{sfml-window}: SFML/Window/{hxx cxx}{* -EGLCheck -EglContext} $intf_libs
+lib{sfml-window}: SFML/Window/{hxx cxx}{* -EGLCheck -EglContext}
 lib{sfml-window}: SFML/Window/{hxx cxx}{EGLCheck EglContext}: include = (!$is_ios && $config.libsfml_window.use_opengles)
 lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl -GlxContext -GlxExtensions}: include = $is_linux_or_bsd
 lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{GlxContext GlxExtensions} : include = ($is_linux_or_bsd && !$config.libsfml_window.use_opengles)
@@ -31,11 +31,11 @@ lib{sfml-window}: SFML/Window/FreeBSD/{hxx cxx}{*}: include = $is_freebsd
 lib{sfml-window}: SFML/Window/iOS/{hxx cxx}{*}: include = $is_ios
 lib{sfml-window}: SFML/Window/Unix/{hxx cxx}{* -JoystickImpl -GlxContext}: include = $is_android
 lib{sfml-window}: SFML/Window/Android/{hxx cxx}{*}: include = $is_android
-
-# MacOS
-# =====
 lib{sfml-window}: SFML/Window/OSX/{h hxx cxx}{*}: include = $is_macos
+lib{sfml-window}: $intf_libs
 
+# Obj-C
+# =====
 define mm: file
 mm{*}: extension = mm
 

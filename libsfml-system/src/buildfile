@@ -67,7 +67,6 @@ cxx.libs += $platform_libs
 lib{sfml-system}:
 {
   cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc"
-  cxx.export.libs = $intf_libs
 }
 
 liba{sfml-system}: cxx.export.poptions += -DSFML_STATIC

@@ -1,7 +1,7 @@
 import intf_libs = libsfml-window%lib{sfml-window}
-import intf_libs += libfreetype%lib{freetype}
-import intf_libs += stb_image%lib{stb_image}
-import intf_libs += stb_image_write%lib{stb_image_write}
+import impl_libs = libfreetype%lib{freetype}
+import impl_libs += stb_image%lib{stb_image}
+import impl_libs += stb_image_write%lib{stb_image_write}
 
 # definition needed for building SFML
 # but must be disabled for all importing libraries
@@ -15,7 +15,7 @@ include $pub
 pub_hdrs = $($pub/ pub_hdrs)
 
 lib{sfml-graphics}: $pub/{$pub_hdrs}
-lib{sfml-graphics}: SFML/Graphics/{hxx cxx}{* -GLLoader} $intf_libs
+lib{sfml-graphics}: SFML/Graphics/{hxx cxx}{* -GLLoader} $intf_libs $impl_libs
 lib{sfml-graphics}: SFML/Graphics/{hxx cxx}{GLLoader}: include = (!$config.libsfml_graphics.use_opengles)
 
 platform_libs =

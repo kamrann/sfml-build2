@@ -133,7 +133,6 @@ objs{~'/(.*).so/'}: m{~'/\1/'} libus{sfml-window-meta}
 
 platform_libs = # Platform specific libraries.
 platform_poptions = # Platform specific poptions.
-platform_coptions = # Platform specific coptions.
 unix_libs = -lX11 -lXrandr -lGL
 switch $config.libsfml_window.platform
 {
@@ -203,13 +202,11 @@ src_pfx_src = [dir_path] $src_root/src/
 cxx.poptions += "-I$out_pfx_src" "-I$src_pfx_src" \
                 "-I$out_pfx_inc" "-I$src_pfx_inc" \
                 $platform_poptions
-cxx.coptions += $platform_coptions
 cxx.libs += $platform_libs
 
 c.poptions += "-I$out_pfx_src" "-I$src_pfx_src" \
               "-I$out_pfx_inc" "-I$src_pfx_inc" \
               $platform_poptions
-c.coptions += $platform_coptions
 c.libs += $platform_libs
 
 {hbmia obja}{*}: cxx.poptions += -DSFML_STATIC
@@ -217,7 +214,6 @@ c.libs += $platform_libs
 # Export options.
 lib{sfml-window}:
 {
-    cxx.export.coptions = $platform_coptions
     cxx.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc" $platform_poptions
     cxx.export.libs = $intf_libs $platform_libs
 }

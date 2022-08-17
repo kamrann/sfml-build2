@@ -3,6 +3,10 @@ import intf_libs += libfreetype%lib{freetype}
 import intf_libs += stb_image%lib{stb_image}
 import intf_libs += stb_image_write%lib{stb_image_write}
 
+# definition needed for building SFML
+# but must be disabled for all importing libraries
+cxx.poptions += -DSFML_GRAPHICS_EXPORTS
+
 # Public headers.
 pub = [dir_path] ../include/
 

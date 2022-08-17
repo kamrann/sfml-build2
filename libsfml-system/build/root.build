@@ -19,10 +19,6 @@ source build/sfml_platform_config.build
 
 config [string] config.libsfml_system.platform ?= $sfml_platform
 
-# definition needed for building SFML
-# but must be disabled for all importing libraries
-cxx.poptions += -DSFML_SYSTEM_EXPORTS
-
 # set sfml_platform to configured value and do validation check
 sfml_platform = $config.libsfml_system.platform
 source build/sfml_platform_check.build

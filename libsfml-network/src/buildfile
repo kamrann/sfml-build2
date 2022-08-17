@@ -1,5 +1,9 @@
 import intf_libs = libsfml-system%lib{sfml-system}
 
+# definition needed for building SFML
+# but must be disabled for all importing libraries
+cxx.poptions += -DSFML_NETWORK_EXPORTS
+
 # Public headers.
 pub = [dir_path] ../include/
 

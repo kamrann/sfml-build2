@@ -1,3 +1,7 @@
+# definition needed for building SFML
+# but must be disabled for all importing libraries
+cxx.poptions += -DSFML_SYSTEM_EXPORTS
+
 # Public headers.
 pub = [dir_path] ../include/
 

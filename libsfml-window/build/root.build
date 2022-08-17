@@ -21,10 +21,6 @@ source build/sfml_platform_config.build
 config [string] config.libsfml_window.platform ?= $sfml_platform
 config [bool] config.libsfml_window.use_opengles ?= false
 
-# definition needed for building SFML
-# but must be disabled for all importing libraries
-cxx.poptions += -DSFML_WINDOW_EXPORTS
-
 # set sfml_platform to configured value and do validation check
 sfml_platform = $config.libsfml_window.platform
 source build/sfml_platform_check.build

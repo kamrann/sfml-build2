@@ -37,12 +37,12 @@ switch $config.libsfml_system.platform
     }
     case 'linux'
     {
-        platform_libs = -lpthread -lrt
+        platform_libs = -pthread -lrt
     }
     case 'macos'
     case 'openbsd'
     {
-        platform_libs = -lpthread
+        platform_libs = -pthread
     }
     case 'android'
     {

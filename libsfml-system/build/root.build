@@ -3,7 +3,7 @@ cxx.std = latest
 using cxx
 
 hxx{*}: extension = hpp
-ixx{*}: extension = ipp
+ixx{*}: extension = inl
 txx{*}: extension = tpp
 cxx{*}: extension = cpp
 

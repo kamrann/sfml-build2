@@ -1,4 +1,4 @@
-pub_hdrs = hxx{**} hxx{**.inl}
+pub_hdrs = hxx{**} ixx{**}
 
 ./: $pub_hdrs
 

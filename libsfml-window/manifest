@@ -1,6 +1,6 @@
 : 1
 name: libsfml-window
-version: 2.5.1+1
+version: 2.5.1+2
 project: sfml
 summary: The SFML Window module.
 license: Zlib

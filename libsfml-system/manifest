@@ -1,6 +1,6 @@
 : 1
 name: libsfml-system
-version: 2.5.1+1
+version: 2.5.1+2
 project: sfml
 summary: The SFML System module.
 license: Zlib

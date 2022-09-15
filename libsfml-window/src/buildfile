@@ -229,4 +229,4 @@ else
     lib{sfml-window}: bin.lib.version = "-$version.major.$version.minor"
 
 # Don't install private headers.
-{hxx ixx txx}{*}: install = false
+{hxx ixx}{*}: install = false

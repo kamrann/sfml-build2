@@ -3,6 +3,7 @@ cxx.std = latest
 using cxx
 
 hxx{*}: extension = hpp
+ixx{*}: extension = inl
 cxx{*}: extension = cpp
 
 # Assume headers are importable unless stated otherwise.

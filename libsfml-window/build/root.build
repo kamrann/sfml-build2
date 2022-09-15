@@ -4,9 +4,8 @@ using cxx
 using c
 
 hxx{*}: extension = hpp
-ixx{*}: extension = ipp
-txx{*}: extension = tpp
 cxx{*}: extension = cpp
+ixx{*}: extension = inl
 
 # Assume headers are importable unless stated otherwise.
 #

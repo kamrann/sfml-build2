@@ -16,7 +16,8 @@ pub_hdrs = $($pub/ pub_hdrs)
 
 lib{sfml-graphics}: $pub/{$pub_hdrs}
 lib{sfml-graphics}: SFML/Graphics/{hxx cxx}{* -GLLoader}
-lib{sfml-graphics}: SFML/Graphics/{hxx cxx}{GLLoader}: include = (!$config.libsfml_graphics.use_opengles)
+# file seems to have gone, and can't find anything relating to this in the upstream 2.6 cmake...
+#lib{sfml-graphics}: SFML/Graphics/{hxx cxx}{GLLoader}: include = (!$config.libsfml_graphics.use_opengles)
 lib{sfml-graphics}: $intf_libs $impl_libs
 
 platform_libs =

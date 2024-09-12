@@ -2,6 +2,10 @@ import libs += libsfml-graphics%lib{sfml-graphics}
 
 ./ : exe{example-island} exe{example-joystick} exe{example-opengl} exe{example-shader}
 
+# is there a way to constrain this to a target, or requires separate buildfiles?
+cxx.poptions += "-I$src_base/opengl"
+cxx.poptions += "-I$src_base/island"
+
 exe{example-island}: island/cxx{*} island/hxx{*.h} island/resources/file{*} $libs
 exe{example-joystick}: joystick/cxx{*} joystick/resources/file{*} $libs
 exe{example-opengl}: opengl/cxx{*} opengl/resources/file{*} $libs

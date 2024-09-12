@@ -1,4 +1,5 @@
 import libs += libsfml-window%lib{sfml-window}
 
 ./: exe{example-window}
+cxx.poptions += "-I$src_base/window"
 exe{example-window}: window/cxx{*} $libs
